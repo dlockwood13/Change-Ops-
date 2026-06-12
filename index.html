@@ -2,30 +2,21 @@
 <html lang="en-GB">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#0B1220" />
-<title>Change-Ops — assess · prioritise · critique business change</title>
-<meta name="description" content="Change-Ops — a four-phase change decision engine: intake, impact, ADKAR readiness and prioritisation, with a weighted decision gate. Modelled on the career-ops skeleton." />
-<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="description" content="Change-Ops: assess, prioritise and critique business change. Weighted gate verdicts, ownership model recommendations, a tracked pipeline and portfolio patterns." />
 <meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="Change-Ops" />
-<link rel="manifest" href="manifest.webmanifest" />
-<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
-<link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png" />
-<script>
-  window.__deferredPrompt = null;
-  window.addEventListener("beforeinstallprompt", function(e){ e.preventDefault(); window.__deferredPrompt = e; window.dispatchEvent(new Event("pwa-installable")); });
-  window.addEventListener("appinstalled", function(){ window.__deferredPrompt = null; window.dispatchEvent(new Event("pwa-installed")); });
-</script>
+<title>Change-Ops · assess, prioritise, critique business change</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root{
     --bg:#0B1220; --surface:#121C2E; --surface-2:#1A2740; --raised:#22324E;
-    --line:#24344F; --line-2:#2F4566; --line-soft:#1E2C45;
+    --line:#24344F; --line-2:#2F436B; --line-soft:#1E2C45;
     --ink:#E8EEF7; --ink-2:#C5D2E6; --muted:#8DA2C0; --faint:#5E718E;
     --teal:#2DD4BF; --teal-deep:#14B8A6; --teal-dim:#0E3B38;
     --proceed:#34D399; --proceed-bg:#0F3328;
@@ -33,1030 +24,1178 @@
     --hold:#FB923C; --hold-bg:#3A220C;
     --reject:#F87171; --reject-bg:#3A1517;
     --info:#56B0F4; --info-bg:#0F2A45;
-    --violet:#A78BFA; --pink:#F472B6;
     --radius:14px; --radius-sm:9px;
     --shadow:0 1px 0 rgba(255,255,255,.03), 0 14px 40px -18px rgba(0,0,0,.7);
     --mono:"Space Grotesk", ui-monospace, monospace;
     --disp:"Space Grotesk", system-ui, sans-serif;
-    --body:"Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    --body:"Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+  body{min-height:100vh}
   button{font-family:inherit;cursor:pointer}
   input,textarea,select{font-family:inherit}
   a{color:var(--teal)}
   ::selection{background:rgba(45,212,191,.25)}
-  .app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+  .app{display:grid;grid-template-columns:228px 1fr;min-height:100vh}
   @media (max-width:880px){ .app{grid-template-columns:1fr} .rail{display:none} }
-  .rail{background:linear-gradient(180deg,#0C1424,#0A111F);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:18px 14px;gap:5px;overflow-y:auto}
+
+  /* ---------- Rail ---------- */
+  .rail{background:linear-gradient(180deg,#0C1424,#0A111F);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:18px 14px;gap:6px}
   .brand{display:flex;align-items:center;gap:10px;padding:6px 8px 14px}
-  .brand .mark{width:30px;height:30px;border-radius:8px;background:radial-gradient(circle at 30% 30%,var(--teal),var(--teal-deep));display:grid;place-items:center;box-shadow:0 0 0 1px rgba(45,212,191,.35),0 0 22px -4px rgba(45,212,191,.6)}
-  .brand .mark svg{width:17px;height:17px}
-  .brand b{font-family:var(--disp);font-weight:700;letter-spacing:-.02em;font-size:16px}
-  .brand small{display:block;color:var(--faint);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;margin-top:1px}
-  .navbtn{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:transparent;border:1px solid transparent;color:var(--ink-2);padding:9px 11px;border-radius:10px;font-size:13.5px;font-weight:500;transition:.13s}
-  .navbtn svg{width:17px;height:17px;opacity:.8;flex:none}
-  .navbtn:hover{background:var(--surface);color:var(--ink)}
-  .navbtn.active{background:linear-gradient(90deg,rgba(45,212,191,.14),rgba(45,212,191,.03));border-color:rgba(45,212,191,.3);color:var(--ink)}
-  .navbtn.active svg{opacity:1;color:var(--teal)}
-  .navbtn .pill{margin-left:auto;background:var(--surface-2);color:var(--muted);font-size:11px;font-family:var(--mono);padding:1px 7px;border-radius:20px;min-width:22px;text-align:center}
-  .rail .spacer{flex:1;min-height:8px}
-  .railfoot{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:7px}
-  .ghostbtn{display:flex;align-items:center;gap:8px;justify-content:center;background:var(--surface);border:1px solid var(--line);color:var(--ink-2);padding:8px;border-radius:9px;font-size:12.5px;font-weight:500;transition:.13s}
-  .ghostbtn:hover{border-color:var(--teal-deep);color:var(--ink)}
-  .ghostbtn svg{width:15px;height:15px}
-  .ghostbtn.install{background:linear-gradient(180deg,var(--teal),var(--teal-deep));border-color:transparent;color:#04231f;font-weight:600}
-  .ghostbtn.install:hover{filter:brightness(1.05)}
-  .swstat{display:flex;align-items:center;gap:7px;font-size:10px;color:var(--faint);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:1px 3px}
-  .swstat .dot{width:7px;height:7px;border-radius:50%;background:var(--faint);flex:none}
-  .swstat.on{color:var(--proceed)}
-  .swstat.on .dot{background:var(--proceed);box-shadow:0 0 8px -1px var(--proceed)}
-  .storewarn{font-size:10.5px;color:var(--caution);background:var(--caution-bg);border:1px solid rgba(251,191,36,.3);padding:7px 9px;border-radius:8px;line-height:1.4}
-  .main{min-width:0;display:flex;flex-direction:column}
-  .topbar{position:sticky;top:0;z-index:20;background:rgba(11,18,32,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:14px 26px;display:flex;align-items:center;gap:16px}
-  .topbar h1{font-family:var(--disp);font-size:18px;font-weight:600;letter-spacing:-.02em;margin:0}
-  .topbar .sub{color:var(--muted);font-size:12.5px;margin-top:2px}
-  .topbar .right{margin-left:auto;display:flex;gap:9px;align-items:center}
-  .btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 13px;border-radius:9px;font-size:13px;font-weight:500;transition:.13s}
-  .btn:hover{border-color:var(--teal-deep)}
-  .btn svg{width:15px;height:15px}
-  .btn.primary{background:linear-gradient(180deg,var(--teal),var(--teal-deep));border-color:transparent;color:#04231f;font-weight:600;box-shadow:0 6px 18px -8px rgba(45,212,191,.7)}
-  .btn.primary:hover{filter:brightness(1.05)}
-  .btn.subtle{background:transparent}
-  .wrap{padding:24px 26px 70px;max-width:1200px;width:100%}
+  .brand .mark{width:30px;height:30px;border-radius:8px;background:radial-gradient(circle at 30% 30%,var(--teal),var(--teal-deep) 60%,#0A6157);display:flex;align-items:center;justify-content:center;color:#05201C;font-family:var(--disp);font-weight:700;font-size:15px;box-shadow:0 0 18px rgba(45,212,191,.35)}
+  .brand h1{font-family:var(--disp);font-size:17px;font-weight:700;letter-spacing:.02em;margin:0}
+  .brand small{display:block;color:var(--faint);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:500}
+  .nav-btn{display:flex;align-items:center;gap:10px;width:100%;border:1px solid transparent;background:transparent;color:var(--muted);font-size:13.5px;font-weight:500;padding:10px 12px;border-radius:10px;text-align:left;transition:all .15s}
+  .nav-btn:hover{color:var(--ink);background:var(--surface)}
+  .nav-btn.on{color:var(--teal);background:var(--teal-dim);border-color:rgba(45,212,191,.25)}
+  .nav-btn .k{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--faint);background:var(--surface);border:1px solid var(--line-soft);border-radius:5px;padding:1px 6px}
+  .rail .spacer{flex:1}
+  .rail-foot{border-top:1px solid var(--line-soft);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+  .rail-foot .meta{font-size:10.5px;color:var(--faint);line-height:1.5;padding:0 4px}
+  .rail-foot .meta b{color:var(--muted);font-weight:600}
+
+  /* ---------- Topbar (mobile) ---------- */
+  .topbar{display:none}
+  @media (max-width:880px){
+    .topbar{display:flex;position:sticky;top:0;z-index:40;background:rgba(11,18,32,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 12px;gap:6px;align-items:center;overflow-x:auto;scrollbar-width:none}
+    .topbar::-webkit-scrollbar{display:none}
+    .topbar .mark{width:26px;height:26px;border-radius:7px;background:radial-gradient(circle at 30% 30%,var(--teal),var(--teal-deep));display:flex;align-items:center;justify-content:center;color:#05201C;font-family:var(--disp);font-weight:700;font-size:13px;flex:0 0 auto}
+    .topbar .tb{flex:0 0 auto;border:1px solid var(--line-soft);background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;padding:7px 12px;border-radius:999px}
+    .topbar .tb.on{color:var(--teal);background:var(--teal-dim);border-color:rgba(45,212,191,.3)}
+  }
+
+  /* ---------- Main ---------- */
+  .main{padding:26px 30px 70px;max-width:1060px;width:100%;margin:0 auto;min-width:0}
+  @media (max-width:880px){ .main{padding:18px 14px 70px} }
+  .page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+  .page-head h2{font-family:var(--disp);font-size:22px;font-weight:700;margin:0;letter-spacing:.01em}
+  .page-head p{margin:4px 0 0;color:var(--muted);font-size:13px;max-width:640px;line-height:1.5}
+  .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);font-weight:600;margin-bottom:6px}
+
+  /* ---------- Cards / layout ---------- */
   .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
-  .sec-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);font-weight:600}
-  .muted{color:var(--muted)} .faint{color:var(--faint)}
-  .hr{height:1px;background:var(--line);border:0;margin:0}
-  .grid{display:grid;gap:16px}
-  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-  .tag{font-family:var(--mono);font-size:11px;padding:2px 9px;border-radius:20px;border:1px solid var(--line);color:var(--muted);background:var(--surface-2);white-space:nowrap}
-  .empty{text-align:center;padding:64px 20px;color:var(--muted)}
-  .empty svg{width:42px;height:42px;color:var(--faint);margin-bottom:14px}
-  .empty h3{font-family:var(--disp);color:var(--ink);font-weight:600;margin:0 0 6px}
-  label.fld{display:block;margin-bottom:14px}
-  label.fld .lab{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--ink-2);margin-bottom:6px;letter-spacing:.01em}
-  label.fld .hint{color:var(--faint);font-weight:400;font-size:11px}
-  .inp,textarea.inp,select.inp{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:9px 11px;font-size:13.5px;transition:.13s;outline:none}
-  textarea.inp{resize:vertical;min-height:64px;line-height:1.5}
-  .inp:focus,textarea.inp:focus,select.inp:focus{border-color:var(--teal-deep);box-shadow:0 0 0 3px rgba(45,212,191,.12)}
-  select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238DA2C0' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px}
-  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  .three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-  @media (max-width:680px){ .two,.three{grid-template-columns:1fr} }
-  .rate{display:flex;flex-direction:column;gap:8px;padding:13px 14px;border:1px solid var(--line);border-radius:11px;background:var(--surface-2)}
-  .rate .top{display:flex;align-items:flex-start;gap:10px}
-  .rate .top .ic{width:30px;height:30px;border-radius:8px;background:var(--bg);border:1px solid var(--line);display:grid;place-items:center;flex:none;color:var(--teal)}
-  .rate .top .ic svg{width:16px;height:16px}
-  .rate .ttl{font-weight:600;font-size:13px}
-  .rate .desc{color:var(--muted);font-size:11.5px;line-height:1.45;margin-top:2px}
-  .rate .val{margin-left:auto;font-family:var(--mono);font-weight:700;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:2px 9px;flex:none}
-  .seg{display:flex;gap:4px}
-  .seg button{flex:1;background:var(--bg);border:1px solid var(--line);color:var(--muted);padding:5px 0;border-radius:7px;font-size:11.5px;font-weight:600;font-family:var(--mono);transition:.1s}
-  .seg button:hover{border-color:var(--teal-deep)}
-  .seg button.on{background:linear-gradient(180deg,var(--teal),var(--teal-deep));border-color:transparent;color:#04231f}
-  .legend{display:flex;justify-content:space-between;font-size:10px;color:var(--faint);font-family:var(--mono);padding:0 2px}
-  .gate{position:relative;overflow:hidden;border-radius:var(--radius);border:1px solid var(--line);background:radial-gradient(900px 300px at 100% -40%, rgba(45,212,191,.10), transparent 60%), var(--surface)}
-  .gate .body{display:grid;grid-template-columns:auto 1fr;gap:22px;padding:20px 22px;align-items:center}
-  @media (max-width:680px){ .gate .body{grid-template-columns:1fr} }
-  .dial{width:150px;height:150px;flex:none;position:relative;display:grid;place-items:center}
-  .dial .num{position:absolute;text-align:center}
-  .dial .num b{font-family:var(--mono);font-size:40px;font-weight:700;letter-spacing:-.02em;line-height:1}
-  .dial .num span{display:block;font-size:10.5px;color:var(--muted);font-family:var(--mono);letter-spacing:.12em;margin-top:3px}
-  .verdict-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .verdict{font-family:var(--disp);font-weight:700;font-size:24px;letter-spacing:-.02em}
-  .vchip{font-family:var(--mono);font-size:11px;font-weight:600;padding:3px 11px;border-radius:20px;letter-spacing:.05em}
-  .metstrip{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
-  .met{flex:1;min-width:108px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
-  .met .k{font-size:9.5px;color:var(--faint);font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase}
-  .met .v{font-weight:700;font-size:18px;font-family:var(--mono);margin-top:2px}
-  .met .v small{font-size:11px;font-family:var(--body);color:var(--muted);font-weight:500}
-  .met .s{font-size:11px;color:var(--muted);margin-top:1px}
-  .bars{display:flex;flex-direction:column;gap:9px}
-  .bar-row{display:grid;grid-template-columns:140px 1fr 40px;align-items:center;gap:11px;font-size:12.5px}
-  .bar-row .lab{color:var(--ink-2);font-weight:500}
-  .track{height:7px;border-radius:6px;background:var(--bg);border:1px solid var(--line);overflow:hidden}
-  .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--teal-deep),var(--teal))}
-  .fill.risk{background:linear-gradient(90deg,#b34646,var(--reject))}
-  .fill.violet{background:linear-gradient(90deg,#7c5fe0,var(--violet))}
-  .bar-row .n{font-family:var(--mono);text-align:right;color:var(--ink);font-weight:600}
-  .radar-wrap{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
-  .radar text{font-family:var(--mono);font-size:9px;fill:var(--muted)}
-  .ptable{width:100%;border-collapse:collapse;font-size:13px}
-  .ptable th{text-align:left;color:var(--faint);font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;padding:0 12px 10px;border-bottom:1px solid var(--line)}
-  .ptable td{padding:12px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
-  .ptable tr:hover td{background:var(--surface-2)}
-  .ptable tr{cursor:pointer}
-  .ptable .nm{font-weight:600;color:var(--ink)}
-  .ptable .rf{font-family:var(--mono);font-size:11px;color:var(--faint)}
-  .scorepill{font-family:var(--mono);font-weight:700;font-size:14px;padding:3px 9px;border-radius:8px;display:inline-block;min-width:42px;text-align:center}
-  .statusdot{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:500}
-  .statusdot i{width:8px;height:8px;border-radius:50%;flex:none}
-  .pdots{display:inline-flex;gap:3px} .pdots i{width:6px;height:6px;border-radius:50%;background:var(--line-2)} .pdots i.on{background:var(--teal)}
-  .block{margin-bottom:16px}
-  .blockhead{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-  .blockhead .bn{font-family:var(--mono);font-weight:700;font-size:13px;color:#04231f;background:var(--teal);min-width:26px;height:26px;padding:0 6px;border-radius:7px;display:grid;place-items:center;flex:none}
-  .blockhead .bn svg{width:15px;height:15px}
-  .blockhead h3{font-family:var(--disp);font-size:16px;font-weight:600;margin:0;letter-spacing:-.01em}
-  .blockhead p{margin:1px 0 0;color:var(--muted);font-size:12px}
-  .cardpad{padding:18px 20px}
-  .stepper{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
-  .step{flex:1;min-width:150px;display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 13px;text-align:left;transition:.13s}
-  .step:hover{border-color:var(--teal-deep)}
-  .step.active{border-color:var(--teal);background:linear-gradient(90deg,rgba(45,212,191,.12),transparent)}
-  .step .sn{width:26px;height:26px;border-radius:7px;background:var(--surface-2);border:1px solid var(--line);display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:13px;color:var(--muted);flex:none}
-  .step .sn svg{width:14px;height:14px}
-  .step.active .sn{background:var(--teal);color:#04231f;border-color:transparent}
-  .step.done .sn{background:var(--proceed-bg);color:var(--proceed);border-color:var(--proceed)}
-  .step .st{font-weight:600;font-size:13px} .step .sd{font-size:11px;color:var(--faint);margin-top:1px}
-  .imatrix{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px}
-  .imatrix th{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:600;padding:6px 8px;text-align:center}
-  .imatrix th.grp{text-align:left}
-  .imatrix td{padding:6px}
-  .imatrix .gname input{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:7px 9px;font-size:12.5px}
-  .sevcell{width:46px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-family:var(--mono);font-weight:700;font-size:12px;color:var(--faint);transition:.1s;display:grid;place-items:center}
-  .sevcell:hover{border-color:var(--teal-deep)}
-  .sevcell.H{background:var(--reject-bg);border-color:var(--reject);color:var(--reject)}
-  .sevcell.M{background:var(--caution-bg);border-color:var(--caution);color:var(--caution)}
-  .sevcell.L{background:var(--proceed-bg);border-color:var(--proceed);color:var(--proceed)}
-  .quad text{font-family:var(--mono);fill:var(--muted)}
-  .quadlab{font-size:10px;fill:var(--faint)}
-  .mitcard{border:1px solid var(--line);border-radius:11px;background:var(--surface-2);padding:13px 15px;margin-bottom:10px}
-  .mitcard .mh{display:flex;align-items:center;gap:9px;margin-bottom:7px}
-  .mitcard .badge{font-family:var(--mono);font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--info-bg);color:var(--info);border:1px solid var(--info)}
-  .mitcard h4{font-family:var(--disp);font-size:14px;margin:0;font-weight:600}
-  .mitcard ul{margin:0;padding-left:18px;color:var(--ink-2);font-size:12.5px;line-height:1.6}
-  .callout{display:flex;gap:12px;align-items:flex-start;padding:13px 15px;border-radius:11px;border:1px solid var(--caution);background:var(--caution-bg);margin-bottom:14px}
-  .callout svg{width:18px;height:18px;color:var(--caution);flex:none;margin-top:1px}
-  .callout b{color:var(--ink)}
-  .mcols{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-  @media (max-width:760px){ .mcols{grid-template-columns:1fr 1fr} }
-  .mcol{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:12px;min-height:90px}
-  .mcol h4{font-family:var(--disp);font-size:13px;margin:0 0 9px;display:flex;align-items:center;gap:7px}
-  .mcol h4 i{width:9px;height:9px;border-radius:3px;flex:none}
-  .mcard{background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:8px 10px;font-size:12px;margin-bottom:7px;cursor:pointer}
-  .mcard:hover{border-color:var(--teal-deep)}
-  .mcard .s{font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:2px}
-  .wboard{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
-  @media (max-width:980px){ .wboard{grid-template-columns:1fr 1fr 1fr} } @media (max-width:620px){ .wboard{grid-template-columns:1fr} }
-  .wcol{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:11px;min-height:90px}
-  .wcol h4{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 9px;display:flex;justify-content:space-between}
-  .wcard{background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:9px 10px;margin-bottom:8px}
-  .wcard .nm{font-weight:600;font-size:12.5px;line-height:1.3}
-  .wcard .meta{font-size:10.5px;color:var(--faint);font-family:var(--mono);margin:4px 0 7px;display:flex;gap:8px;flex-wrap:wrap}
-  .wcard select{width:100%;background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2);border-radius:7px;padding:5px 7px;font-size:11.5px;appearance:none}
-  .satmatrix{width:100%;border-collapse:separate;border-spacing:3px;font-size:12px}
-  .satmatrix th{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);font-weight:600;padding:4px 8px}
-  .satmatrix th.grp{text-align:left}
-  .satmatrix td.grp{text-align:left;color:var(--ink-2);font-weight:500;padding-right:10px;white-space:nowrap}
-  .satcell{height:34px;border-radius:7px;display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:12px;border:1px solid var(--line-soft)}
-  .stat{padding:16px 18px} .stat .n{font-family:var(--mono);font-weight:700;font-size:30px;letter-spacing:-.02em} .stat .l{color:var(--muted);font-size:12px;margin-top:2px}
-  .funnel{display:flex;flex-direction:column;gap:7px}
-  .funnel .f{display:grid;grid-template-columns:120px 1fr 34px;gap:10px;align-items:center;font-size:12.5px}
-  .funnel .f .ft{height:24px;border-radius:6px;display:flex;align-items:center;padding-left:9px;font-family:var(--mono);font-weight:600;font-size:11px;color:#04231f;min-width:24px}
-  .weights{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-  @media (max-width:680px){ .weights{grid-template-columns:1fr} }
-  .wt{display:flex;align-items:center;gap:11px;font-size:12.5px}
-  .wt label{flex:1;color:var(--ink-2);font-weight:500}
-  .wt input[type=range]{flex:1;accent-color:var(--teal)}
-  .wt .pct{font-family:var(--mono);font-weight:600;width:42px;text-align:right;color:var(--ink)}
-  .scrim{position:fixed;inset:0;background:rgba(4,8,16,.66);backdrop-filter:blur(3px);z-index:50;display:grid;place-items:center;padding:20px}
-  .modal{width:100%;max-width:460px;max-height:90vh;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 30px 80px -20px rgba(0,0,0,.8)}
-  .modal .mh{display:flex;align-items:center;gap:10px;padding:18px 20px;border-bottom:1px solid var(--line)}
-  .modal .mh .ic{color:var(--reject)} .modal .mh .ic svg{width:18px;height:18px}
-  .modal .mh h3{font-family:var(--disp);font-size:17px;font-weight:600;margin:0}
-  .modal .mb{padding:18px 20px} .modal .mf{padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end}
-  .iconbtn{background:transparent;border:1px solid var(--line);color:var(--muted);width:30px;height:30px;border-radius:8px;display:grid;place-items:center;transition:.12s}
-  .iconbtn:hover{border-color:var(--reject);color:var(--reject)} .iconbtn svg{width:15px;height:15px}
-  .iconbtn.sm{width:26px;height:26px} .iconbtn.sm svg{width:13px;height:13px}
-  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--raised);border:1px solid var(--teal-deep);color:var(--ink);padding:11px 18px;border-radius:10px;font-size:13px;z-index:80;box-shadow:var(--shadow);display:flex;align-items:center;gap:9px;max-width:90vw}
-  .toast svg{width:16px;height:16px;color:var(--teal);flex:none}
-  .activebar{display:flex;align-items:center;gap:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:18px}
-  .activebar .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
-  .activebar .nm{font-family:var(--disp);font-weight:600;font-size:16px}
-  .activebar select{margin-left:auto;max-width:300px}
-  .typetag{font-size:11px;font-weight:600;padding:2px 9px;border-radius:6px;font-family:var(--mono)}
-  .scrollx{overflow-x:auto}
-  .chip2{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mono);font-weight:600;padding:2px 9px;border-radius:20px;border:1px solid var(--line);background:var(--surface-2)}
-  .chip2 svg{width:12px;height:12px}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line-soft)}
+  .card-h h3{margin:0;font-family:var(--disp);font-size:14px;font-weight:600;letter-spacing:.02em}
+  .card-h .block-tag{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--faint);text-transform:uppercase}
+  .card-b{padding:16px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media (max-width:760px){ .grid2,.grid3{grid-template-columns:1fr} }
+  .stack{display:flex;flex-direction:column;gap:14px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+  /* ---------- Inputs ---------- */
+  label.f-label{display:block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+  .f-input,.f-area,.f-select{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius-sm);color:var(--ink);font-size:13.5px;padding:9px 11px;outline:none;transition:border-color .15s}
+  .f-input:focus,.f-area:focus,.f-select:focus{border-color:var(--teal)}
+  .f-area{resize:vertical;min-height:64px;line-height:1.5}
+  .f-hint{font-size:11px;color:var(--faint);margin-top:5px;line-height:1.45}
+
+  /* sliders */
+  .dim{padding:10px 0;border-bottom:1px dashed var(--line-soft)}
+  .dim:last-child{border-bottom:0}
+  .dim-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+  .dim-top b{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .dim-top .val{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--teal)}
+  .dim-top .w{font-family:var(--mono);font-size:10px;color:var(--faint);margin-left:6px}
+  .dim p{margin:0 0 7px;font-size:11.5px;color:var(--faint);line-height:1.45}
+  input[type=range]{width:100%;height:24px;appearance:none;-webkit-appearance:none;background:transparent;cursor:pointer;margin:0}
+  input[type=range]::-webkit-slider-runnable-track{height:5px;border-radius:3px;background:linear-gradient(90deg,var(--reject),var(--caution) 45%,var(--proceed))}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:var(--ink);border:3px solid var(--bg);margin-top:-6px;box-shadow:0 0 0 1.5px var(--line-2)}
+  input[type=range]::-moz-range-track{height:5px;border-radius:3px;background:linear-gradient(90deg,var(--reject),var(--caution) 45%,var(--proceed))}
+  input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--ink);border:3px solid var(--bg)}
+
+  /* likert */
+  .lik{display:flex;gap:5px}
+  .lik button{flex:1;background:var(--surface-2);border:1px solid var(--line);border-radius:7px;color:var(--faint);font-family:var(--mono);font-size:12px;font-weight:600;padding:7px 0;transition:all .12s}
+  .lik button:hover{border-color:var(--line-2);color:var(--muted)}
+  .lik button.on{background:var(--teal-dim);border-color:rgba(45,212,191,.45);color:var(--teal)}
+  .lik-row{padding:9px 0;border-bottom:1px dashed var(--line-soft)}
+  .lik-row:last-child{border-bottom:0}
+  .lik-row p{margin:0 0 7px;font-size:12.5px;color:var(--ink-2);line-height:1.45}
+
+  /* signal tri-state */
+  .sig{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line-soft);flex-wrap:wrap}
+  .sig:last-child{border-bottom:0}
+  .sig .q{flex:1 1 240px;font-size:12.5px;color:var(--ink-2);line-height:1.45}
+  .sig .q small{display:block;color:var(--faint);font-size:10.5px;margin-top:2px}
+  .sig .rel{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--faint);border:1px solid var(--line-soft);border-radius:5px;padding:2px 6px;text-transform:uppercase}
+  .tri{display:flex;gap:4px}
+  .tri button{background:var(--surface-2);border:1px solid var(--line);border-radius:7px;color:var(--faint);font-size:11px;font-weight:600;padding:6px 9px;transition:all .12s}
+  .tri button.pos.on{background:var(--proceed-bg);border-color:rgba(52,211,153,.4);color:var(--proceed)}
+  .tri button.neu.on{background:var(--surface);border-color:var(--line-2);color:var(--ink-2)}
+  .tri button.con.on{background:var(--reject-bg);border-color:rgba(248,113,113,.4);color:var(--reject)}
+
+  /* flags */
+  .flag{display:flex;align-items:flex-start;gap:9px;padding:8px 10px;border:1px solid var(--line-soft);border-radius:var(--radius-sm);background:var(--surface-2);cursor:pointer;transition:all .12s}
+  .flag:hover{border-color:var(--line-2)}
+  .flag.on{background:var(--reject-bg);border-color:rgba(248,113,113,.4)}
+  .flag input{margin-top:2px;accent-color:var(--reject)}
+  .flag span{font-size:12.5px;color:var(--ink-2);line-height:1.4}
+  .flag.on span{color:#FECACA}
+
+  /* ---------- Verdict panel (signature) ---------- */
+  .verdict{border-radius:var(--radius);border:1px solid var(--line);overflow:hidden;position:sticky;top:18px}
+  @media (max-width:1023px){ .verdict{position:static} }
+  .v-head{padding:18px 18px 14px;border-bottom:1px solid var(--line-soft);background:linear-gradient(180deg,var(--surface-2),var(--surface))}
+  .v-gate{font-family:var(--disp);font-weight:700;font-size:30px;letter-spacing:.06em;line-height:1;display:flex;align-items:center;gap:10px}
+  .v-gate .lamp{width:13px;height:13px;border-radius:50%;box-shadow:0 0 14px currentColor}
+  .v-sub{margin:8px 0 0;font-size:12.5px;color:var(--muted);line-height:1.5}
+  .v-PROCEED .v-gate{color:var(--proceed)} .v-PROCEED .v-head{background:linear-gradient(180deg,var(--proceed-bg),var(--surface))}
+  .v-CAUTION .v-gate{color:var(--caution)} .v-CAUTION .v-head{background:linear-gradient(180deg,var(--caution-bg),var(--surface))}
+  .v-HOLD .v-gate{color:var(--hold)} .v-HOLD .v-head{background:linear-gradient(180deg,var(--hold-bg),var(--surface))}
+  .v-REJECT .v-gate{color:var(--reject)} .v-REJECT .v-head{background:linear-gradient(180deg,var(--reject-bg),var(--surface))}
+  .v-body{padding:14px 18px;background:var(--surface);display:flex;flex-direction:column;gap:12px}
+  .v-score{display:flex;align-items:center;gap:14px}
+  .dial{position:relative;width:88px;height:88px;flex:0 0 auto}
+  .dial svg{transform:rotate(-90deg)}
+  .dial .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .dial .num b{font-family:var(--mono);font-size:21px;font-weight:700;line-height:1}
+  .dial .num small{font-size:9px;color:var(--faint);letter-spacing:.1em;margin-top:2px}
+  .v-rows{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}
+  .v-row{display:flex;justify-content:space-between;gap:10px;font-size:12px}
+  .v-row span{color:var(--faint)}
+  .v-row b{font-family:var(--mono);font-weight:600;color:var(--ink-2);text-align:right}
+  .v-band{font-size:11px;color:var(--faint);line-height:1.55;border-top:1px dashed var(--line-soft);padding-top:10px}
+  .v-band b{color:var(--muted)}
+
+  /* model rec */
+  .model-rec{border:1px solid rgba(45,212,191,.3);background:var(--teal-dim);border-radius:var(--radius-sm);padding:12px 13px}
+  .model-rec .mr-top{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+  .model-rec .mr-chip{font-family:var(--mono);font-weight:700;font-size:12px;color:#05201C;background:var(--teal);border-radius:6px;padding:2px 8px}
+  .model-rec b{font-family:var(--disp);font-size:14px;color:var(--teal)}
+  .model-rec p{margin:0;font-size:11.5px;color:var(--ink-2);line-height:1.5}
+
+  /* tier */
+  .tier{border-radius:var(--radius-sm);padding:10px 12px;font-size:12px;line-height:1.5;border:1px solid}
+  .tier b{display:block;font-family:var(--disp);font-size:13px;margin-bottom:2px}
+  .tier.high{background:var(--proceed-bg);border-color:rgba(52,211,153,.35);color:#A7F3D0}
+  .tier.mixed{background:var(--caution-bg);border-color:rgba(251,191,36,.35);color:#FDE68A}
+  .tier.susp{background:var(--reject-bg);border-color:rgba(248,113,113,.35);color:#FECACA}
+
+  /* ---------- Buttons / chips ---------- */
+  .btn{border:1px solid var(--line-2);background:var(--surface-2);color:var(--ink-2);font-size:13px;font-weight:600;padding:9px 14px;border-radius:10px;transition:all .15s;display:inline-flex;align-items:center;gap:7px}
+  .btn:hover{border-color:var(--teal);color:var(--ink)}
+  .btn.primary{background:var(--teal);border-color:var(--teal);color:#05201C}
+  .btn.primary:hover{background:var(--teal-deep);border-color:var(--teal-deep);color:#04211D}
+  .btn.danger{border-color:rgba(248,113,113,.4);color:var(--reject);background:transparent}
+  .btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+  .btn.ghost:hover{color:var(--ink);border-color:var(--line-soft)}
+  .btn.sm{font-size:12px;padding:6px 10px;border-radius:8px}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:3px 10px;border:1px solid}
+  .chip.proceed{color:var(--proceed);border-color:rgba(52,211,153,.4);background:var(--proceed-bg)}
+  .chip.caution{color:var(--caution);border-color:rgba(251,191,36,.4);background:var(--caution-bg)}
+  .chip.hold{color:var(--hold);border-color:rgba(251,146,60,.4);background:var(--hold-bg)}
+  .chip.reject{color:var(--reject);border-color:rgba(248,113,113,.4);background:var(--reject-bg)}
+  .chip.neutral{color:var(--muted);border-color:var(--line-2);background:var(--surface-2)}
+  .chip.teal{color:var(--teal);border-color:rgba(45,212,191,.4);background:var(--teal-dim)}
+
+  /* archetype picker */
+  .arch{display:flex;flex-wrap:wrap;gap:7px}
+  .arch button{border:1px solid var(--line);background:var(--surface-2);color:var(--muted);border-radius:999px;font-size:12px;font-weight:500;padding:6px 12px;transition:all .12s}
+  .arch button.on{background:var(--teal-dim);border-color:rgba(45,212,191,.45);color:var(--teal);font-weight:600}
+  .arch-hint{font-size:11px;color:var(--faint);margin-top:7px;line-height:1.5}
+  .arch-hint b{color:var(--teal);font-weight:600}
+
+  /* ---------- Pipeline table ---------- */
+  .tbl{width:100%;border-collapse:collapse;font-size:13px}
+  .tbl th{text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:600;padding:9px 10px;border-bottom:1px solid var(--line)}
+  .tbl td{padding:11px 10px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+  .tbl tr:last-child td{border-bottom:0}
+  .tbl tr.click{cursor:pointer;transition:background .12s}
+  .tbl tr.click:hover{background:var(--surface-2)}
+  .tbl .t-name{font-weight:600;color:var(--ink)}
+  .tbl .t-name small{display:block;font-weight:400;color:var(--faint);font-size:11px;margin-top:2px}
+  .tbl .t-score{font-family:var(--mono);font-weight:700;font-size:14px}
+  .tbl .t-num{font-family:var(--mono);color:var(--faint);font-size:11px}
+  .status-sel{background:var(--surface-2);border:1px solid var(--line);border-radius:7px;color:var(--ink-2);font-size:12px;padding:5px 7px;outline:none}
+  .status-sel:focus{border-color:var(--teal)}
+  .funnel{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .fn{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:10px 13px;min-width:86px}
+  .fn b{display:block;font-family:var(--mono);font-size:19px;font-weight:700;color:var(--ink)}
+  .fn span{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  .fn.hot b{color:var(--teal)}
+  .empty{padding:40px 20px;text-align:center;color:var(--faint);font-size:13px;line-height:1.6}
+  .empty b{color:var(--muted)}
+
+  /* ---------- Patterns ---------- */
+  .stat-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:12px 14px}
+  .stat b{display:block;font-family:var(--mono);font-size:20px;font-weight:700}
+  .stat span{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  .bar-row{display:flex;align-items:center;gap:10px;padding:7px 0}
+  .bar-row .lab{flex:0 0 150px;font-size:12px;color:var(--ink-2)}
+  .bar-row .bar{flex:1;height:9px;background:var(--surface-2);border-radius:5px;overflow:hidden}
+  .bar-row .bar i{display:block;height:100%;border-radius:5px;background:var(--teal)}
+  .bar-row .n{flex:0 0 60px;text-align:right;font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .reco{display:flex;gap:11px;padding:11px 0;border-bottom:1px dashed var(--line-soft)}
+  .reco:last-child{border-bottom:0}
+  .reco .imp{flex:0 0 auto;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;font-weight:700;border-radius:5px;padding:3px 7px;height:fit-content}
+  .reco .imp.hi{background:var(--reject-bg);color:var(--reject)}
+  .reco .imp.med{background:var(--caution-bg);color:var(--caution)}
+  .reco .imp.lo{background:var(--info-bg);color:var(--info)}
+  .reco div p{margin:0;font-size:13px;color:var(--ink-2);font-weight:600}
+  .reco div small{display:block;margin-top:3px;font-size:11.5px;color:var(--faint);line-height:1.5}
+
+  /* ---------- Method ---------- */
+  .method p{font-size:13.5px;line-height:1.65;color:var(--ink-2);margin:0 0 12px}
+  .method h4{font-family:var(--disp);font-size:13px;margin:18px 0 8px;color:var(--teal);letter-spacing:.04em;text-transform:uppercase}
+  .method table{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0 14px}
+  .method th{text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);padding:7px 9px;border-bottom:1px solid var(--line)}
+  .method td{padding:8px 9px;border-bottom:1px solid var(--line-soft);color:var(--ink-2);line-height:1.5;vertical-align:top}
+  .rule-list{margin:0;padding-left:18px;font-size:13px;color:var(--ink-2);line-height:1.7}
+
+  /* gaps */
+  .gap-item{border:1px solid var(--line-soft);border-radius:var(--radius-sm);background:var(--surface-2);padding:10px 12px;display:flex;flex-direction:column;gap:7px}
+  .gap-item .g-top{display:flex;gap:8px;align-items:center}
+  .gap-item input.f-input{flex:1}
+  .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--raised);border:1px solid var(--line-2);color:var(--ink);font-size:13px;font-weight:500;padding:11px 18px;border-radius:12px;box-shadow:var(--shadow);z-index:90;animation:toastIn .2s ease}
+  @keyframes toastIn{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+  @media (prefers-reduced-motion:reduce){ *{animation:none !important;transition:none !important} }
+  .install-hint{border:1px dashed rgba(45,212,191,.35);background:var(--teal-dim);color:var(--teal);font-size:11.5px;border-radius:9px;padding:8px 10px;text-align:left;line-height:1.4;width:100%}
 </style>
 </head>
 <body>
 <div id="root"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
 <script type="text/babel" data-presets="react">
+/* ============================================================
+   ENGINE: canonical states, archetypes, scoring, SIMPLIFY logic
+   Mirrors career-ops modes/_shared.md + oferta.md, retargeted.
+   ============================================================ */
+
+const STATUSES = [
+  { id:"assessed", label:"Assessed",    group:"pending",  desc:"Assessed with report, pending decision" },
+  { id:"proposed", label:"Proposed",    group:"positive", desc:"Business case submitted to governance" },
+  { id:"endorsed", label:"Endorsed",    group:"positive", desc:"Sponsor and decision forum have backed it" },
+  { id:"delivery", label:"In Delivery", group:"positive", desc:"Active delivery" },
+  { id:"embedded", label:"Embedded",    group:"positive", desc:"Live, benefits being realised" },
+  { id:"rejected", label:"Rejected",    group:"negative", desc:"Rejected by governance" },
+  { id:"parked",   label:"Parked",      group:"negative", desc:"Shelved or withdrawn by the owner" },
+  { id:"skip",     label:"SKIP",        group:"self",     desc:"Does not fit, do not pursue" }
+];
+const STATUS_BY_ID = Object.fromEntries(STATUSES.map(s => [s.id, s]));
+
+const ARCHETYPES = [
+  { id:"process", label:"Process improvement",        sig:["cycle time","handoff","handoffs","waste","rework","standardise","lean","queue"] },
+  { id:"tech",    label:"Technology implementation",  sig:["system","platform","migration","integration","rollout","decommission","crm","catalogue","cpq"] },
+  { id:"org",     label:"Organisation redesign",      sig:["operating model","restructure","spans","layers","roles","consultation","tupe"] },
+  { id:"reg",     label:"Regulatory and compliance",  sig:["regulator","mandate","deadline","audit","compliance","licence","ofcom","fca"] },
+  { id:"prop",    label:"Proposition launch",         sig:["launch","customer","market","revenue","proposition","pricing","segment"] },
+  { id:"wow",     label:"Ways of working",            sig:["adoption","behaviours","capability","enablement","agile","training","champions"] }
+];
+
+function detectArchetype(text){
+  const t = (text || "").toLowerCase();
+  const scored = ARCHETYPES.map(a => ({
+    id: a.id, label: a.label,
+    hits: a.sig.reduce((n, s) => n + (t.includes(s) ? 1 : 0), 0)
+  })).sort((x, y) => y.hits - x.hits);
+  const primary = scored[0].hits > 0 ? scored[0] : null;
+  const secondary = scored[1].hits >= 2 ? scored[1] : null;
+  return { primary, secondary };
+}
+
+/* ---- Scoring dimensions (weighted 1-5, mirrors the 6-block scheme) ---- */
+const DIMS = [
+  { id:"strategy",   label:"Strategic fit",     w:0.24, hint:"Alignment to strategy and the target operating model. The North Star test: would we invent this if it did not already exist?" },
+  { id:"capability", label:"Capability match",  w:0.22, hint:"Skills, capacity and technology to deliver, mapped to evidence, not optimism." },
+  { id:"benefits",   label:"Benefits case",     w:0.22, hint:"Value against cost. 5 is a top-quartile return with a named baseline, 1 is well below the line." },
+  { id:"readiness",  label:"Readiness signals", w:0.18, hint:"Sponsorship, change appetite, frontline capacity to absorb it." },
+  { id:"risk",       label:"Risk posture",      w:0.14, hint:"5 is well-understood and contained, 1 is unbounded. Red flags below subtract on top." }
+];
+
+const RED_FLAGS = [
+  { id:"nobaseline", label:"No baseline measures exist for the benefits claimed" },
+  { id:"external",   label:"Outcome depends on a supplier or system outside our control" },
+  { id:"frontline",  label:"Frontline teams would be hearing about this here first" },
+  { id:"sponsorchurn", label:"Sponsor has changed in the last two quarters" },
+  { id:"doublecount", label:"Benefits are double-counted with another initiative" },
+  { id:"datefirst",  label:"Delivery date was fixed before scope was shaped" }
+];
+const FLAG_PENALTY = 0.15;
+
+/* ---- Gate verdicts (score interpretation, faithful to the 1-5 bands) ---- */
+const VERDICTS = {
+  PROCEED: { label:"PROCEED", cls:"proceed", sub:"Strong case. Mobilise now and protect it from scope drift." },
+  CAUTION: { label:"CAUTION", cls:"caution", sub:"Good case, proceed with conditions. Close the named gaps before committing the full envelope." },
+  HOLD:    { label:"HOLD",    cls:"hold",    sub:"Decent but not ready. Pursue only with a specific reason, otherwise reshape and reassess." },
+  REJECT:  { label:"REJECT",  cls:"reject",  sub:"Recommend against in current form. Log it, keep the analysis, spend the capacity elsewhere." }
+};
+function verdictFor(global){
+  if (global >= 4.5) return VERDICTS.PROCEED;
+  if (global >= 4.0) return VERDICTS.CAUTION;
+  if (global >= 3.5) return VERDICTS.HOLD;
+  return VERDICTS.REJECT;
+}
+
+/* ---- Readiness sub-assessment (SIMPLIFY ownership logic) ----
+   Eight 0-4 statements. Six place the capability (Independent /
+   Central-new / Central-legacy, models a/b/c), two measure raw
+   readiness to proceed this cycle. */
+const READINESS_QS = [
+  { id:"diff",   q:"The capability is differentiating for this unit, not a commodity" },
+  { id:"reuse",  q:"Other units need substantially the same capability" },
+  { id:"legacy", q:"It is deeply entangled with the legacy core estate" },
+  { id:"data",   q:"It is tightly coupled to systems of record for its data" },
+  { id:"pace",   q:"The pace required exceeds the central delivery cadence" },
+  { id:"skills", q:"The unit has the skills and appetite to own it end to end" },
+  { id:"fund",   q:"Funding and people are actually available this cycle" },
+  { id:"clear",  q:"Scope and success measures are written down and agreed" }
+];
+
+const MODELS = {
+  independent: { ownership:"Independent",    model:"a", blurb:"Unit-owned build or buy. Differentiating, loosely coupled, and the unit can run at its own pace. Guard rails: published interfaces and no quiet forks of master data." },
+  centralNew:  { ownership:"Central-new",    model:"b", blurb:"Build once on the new central stack and expose it to every unit. The reuse case outweighs local speed. Guard rails: a real product owner and a roadmap units can see." },
+  centralLegacy:{ ownership:"Central-legacy", model:"c", blurb:"Extend or configure the existing core system. Entanglement makes a parallel build a migration project in disguise. Guard rails: strangler-pattern boundaries and an exit criterion." }
+};
+
+function recommendModel(r){
+  const g = k => Math.max(0, Math.min(4, Number(r && r[k]) || 0));
+  const diff = g("diff"), reuse = g("reuse"), legacy = g("legacy"),
+        data = g("data"), pace = g("pace"), skills = g("skills");
+  const entangle = (legacy + data) / 2;
+  const scores = {
+    independent:  diff * 1.0 + pace * 0.8 + skills * 1.0 - entangle * 1.2 - reuse * 0.5,
+    centralNew:   reuse * 1.6 + (4 - entangle) * 0.6 + pace * 0.2 - diff * 0.4,
+    centralLegacy: entangle * 1.7 + (4 - diff) * 0.5 + (4 - pace) * 0.4 - skills * 0.2
+  };
+  const ranked = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  const key = ranked[0][0];
+  const why = {
+    independent:  "Driven by differentiation " + diff + "/4, pace " + pace + "/4 and unit skills " + skills + "/4 against entanglement " + entangle.toFixed(1) + "/4.",
+    centralNew:   "Driven by cross-unit reuse " + reuse + "/4 with manageable entanglement " + entangle.toFixed(1) + "/4.",
+    centralLegacy: "Driven by entanglement " + entangle.toFixed(1) + "/4 and low differentiation " + diff + "/4. A parallel build here is a migration in disguise."
+  };
+  return Object.assign({}, MODELS[key], { why: why[key], scores });
+}
+
+function readinessPct(r){
+  const g = k => Math.max(0, Math.min(4, Number(r && r[k]) || 0));
+  return Math.round(100 * (g("skills") + g("fund") + g("clear")) / 12);
+}
+
+/* ---- Block G: initiative legitimacy (separate from the score) ---- */
+const G_SIGNALS = [
+  { id:"sponsor",   q:"Named accountable sponsor with budget authority",                 rel:"High", note:"Direct observable fact" },
+  { id:"funding",   q:"Funding secured this cycle, not aspirational",                    rel:"High", note:"Check the ledger, not the deck" },
+  { id:"problem",   q:"Specific, measurable problem statement",                          rel:"Med",  note:"Vagueness correlates with zombie change, but also with early discovery" },
+  { id:"bowner",    q:"Benefits owner named and signed up",                              rel:"Med",  note:"Benefits without an owner rarely survive year one" },
+  { id:"relaunch",  q:"No history of relaunches under new names",                        rel:"Med",  note:"Two or more relaunches in recent memory is concerning" },
+  { id:"collision", q:"No collision with live change on the same estate or teams",       rel:"Med",  note:"Consider sequencing before assuming conflict" },
+  { id:"governance",q:"Decision forum and route to approval are defined",                rel:"Low",  note:"Subjective in younger organisations" },
+  { id:"urgency",   q:"Urgency is tied to a dated trigger, not vibes",                   rel:"Low",  note:"Regulatory work is legitimately urgent without feeling it" }
+];
+const REL_W = { High:3, Med:2, Low:1 };
+const TIERS = {
+  high:  { label:"High Confidence",       cls:"high",  sub:"Most signals positive. Treat as a real, active piece of change." },
+  mixed: { label:"Proceed with Caution",  cls:"mixed", sub:"Mixed signals worth noting. Observations, not accusations: every signal has legitimate explanations." },
+  susp:  { label:"Suspicious",            cls:"susp",  sub:"Multiple zombie-change indicators. Investigate before investing delivery capacity." }
+};
+function tierFrom(sigs){
+  let net = 0, answered = 0;
+  for (const s of G_SIGNALS){
+    const v = sigs ? Number(sigs[s.id]) || 0 : 0; // 1 positive, 0 neutral, -1 concerning
+    if (sigs && sigs[s.id] !== undefined && sigs[s.id] !== null) answered++;
+    net += REL_W[s.rel] * v;
+  }
+  const t = net >= 6 ? TIERS.high : (net <= -4 ? TIERS.susp : TIERS.mixed);
+  return Object.assign({ net, answered }, t);
+}
+
+/* ---- Per-initiative metrics ---- */
+function metrics(c){
+  const dims = c.dims || {};
+  let weighted = 0;
+  const parts = DIMS.map(d => {
+    const v = Math.max(1, Math.min(5, Number(dims[d.id]) || 3));
+    weighted += d.w * v;
+    return { id: d.id, label: d.label, v, w: d.w };
+  });
+  const flags = (c.flags || []).length;
+  const global = Math.max(1, Math.min(5, weighted - FLAG_PENALTY * flags));
+  const verdict = verdictFor(global);
+  const riskDim = Math.max(1, Math.min(5, Number(dims.risk) || 3));
+  const riskFactor = Math.max(0, Math.min(1, ((5 - riskDim) / 4) * 0.7 + Math.min(flags, 4) / 4 * 0.3));
+  const priority = Math.round(global * 20 * (1 - 0.35 * riskFactor));
+  const rec = recommendModel(c.read);
+  const readiness100 = readinessPct(c.read);
+  const tier = tierFrom(c.sigs);
+  return { parts, flags, global, verdict, riskFactor, priority, rec, readiness100, tier };
+}
+
+/* ---- Outcome classification (patterns) ---- */
+function outcomeOf(statusId){
+  const g = (STATUS_BY_ID[statusId] || {}).group;
+  if (g === "positive") return "positive";
+  if (g === "negative") return "negative";
+  if (g === "self") return "self";
+  return "pending";
+}
+
+function analysePatterns(list){
+  const progressed = list.filter(c => c.status !== "assessed");
+  if (progressed.length < 5) return { short: progressed.length, need: 5 };
+  const withM = list.map(c => ({ c, m: metrics(c), out: outcomeOf(c.status) }));
+  const funnel = STATUSES.map(s => ({ s, n: list.filter(c => c.status === s.id).length }));
+  const groups = ["positive", "negative", "self", "pending"];
+  const scoreComparison = groups.map(gr => {
+    const xs = withM.filter(x => x.out === gr).map(x => x.m.global);
+    if (!xs.length) return { gr, n: 0 };
+    return { gr, n: xs.length, avg: xs.reduce((a, b) => a + b, 0) / xs.length, min: Math.min(...xs), max: Math.max(...xs) };
+  });
+  const archRows = ARCHETYPES.map(a => {
+    const xs = withM.filter(x => (x.c.archetype || "") === a.id);
+    const pos = xs.filter(x => x.out === "positive").length;
+    const done = xs.filter(x => x.out !== "pending").length;
+    return { a, total: xs.length, pos, conv: done ? Math.round(100 * pos / done) : null };
+  }).filter(r => r.total > 0).sort((x, y) => (y.conv ?? -1) - (x.conv ?? -1));
+  const flagRows = RED_FLAGS.map(f => ({
+    f, n: list.filter(c => (c.flags || []).includes(f.id)).length
+  })).filter(r => r.n > 0).sort((x, y) => y.n - x.n);
+  const posScores = withM.filter(x => x.out === "positive").map(x => x.m.global);
+  const floor = posScores.length >= 2 ? Math.min(...posScores) : null;
+  const recs = [];
+  for (const r of archRows){
+    if (r.conv === 0 && r.total >= 2) recs.push({ imp:"hi", p:"Stop assessing raw " + r.a.label.toLowerCase() + " intakes, or reshape them first", s: r.total + " assessed, none progressed to a positive outcome. The pattern says the shaping is failing before governance does." });
+  }
+  if (floor !== null) recs.push({ imp:"med", p:"Treat " + floor.toFixed(1) + "/5 as your evidence-based score floor", s:"No initiative below this score has reached a positive outcome in your own data. Below the floor, reshape rather than propose." });
+  const topFlag = flagRows[0];
+  if (topFlag && topFlag.n >= Math.max(2, Math.ceil(list.length * 0.3))) recs.push({ imp:"hi", p:"Attack your most common red flag: " + topFlag.f.label.toLowerCase(), s:"Present on " + topFlag.n + " of " + list.length + " initiatives. Fixing the intake template is cheaper than fixing every case." });
+  const gateBreaks = withM.filter(x => x.out === "positive" && (x.m.verdict.label === "HOLD" || x.m.verdict.label === "REJECT")).length;
+  if (gateBreaks > 0) recs.push({ imp:"med", p:"Respect your own gate", s: gateBreaks + " initiative(s) progressed despite a HOLD or REJECT verdict. Either the gate is miscalibrated or it is being overridden; decide which on purpose." });
+  const skips = withM.filter(x => x.out === "self").length;
+  if (skips >= Math.ceil(list.length * 0.4)) recs.push({ imp:"lo", p:"Tighten intake upstream", s: skips + " of " + list.length + " were self-filtered after a full assessment. A two-question pre-screen would save that effort." });
+  if (!recs.length) recs.push({ imp:"lo", p:"No strong pattern yet", s:"Outcomes are spread evenly. Keep logging; patterns sharpen quickly after ten or so decided cases." });
+  return { total: list.length, progressed: progressed.length, funnel, scoreComparison, archRows, flagRows, floor, recs };
+}
+
+/* ============================================================
+   PERSISTENCE: storage wrapper with in-memory fallback,
+   so the file also previews where localStorage is sandboxed.
+   ============================================================ */
+const store = {
+  ok: (() => { try { const k = "__co_t"; localStorage.setItem(k, "1"); localStorage.removeItem(k); return true; } catch (e) { return false; } })(),
+  mem: {},
+  get(k, fallback){
+    if (this.ok){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; } catch (e) { return fallback; } }
+    return (k in this.mem) ? this.mem[k] : fallback;
+  },
+  set(k, v){
+    if (this.ok){ try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+    else this.mem[k] = v;
+  }
+};
+const LS_KEY = "change-ops:v1";
+const uid = () => Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4);
+const today = () => new Date().toISOString().slice(0, 10);
+
+function blankInitiative(num){
+  return {
+    id: uid(), num, name: "", sponsor: "", area: "", driver: "fix",
+    horizon: "quarter", summary: "", archetype: "", archetype2: "",
+    dims: { strategy: 3, capability: 3, benefits: 3, readiness: 3, risk: 3 },
+    flags: [], gaps: [],
+    read: { diff: 2, reuse: 2, legacy: 2, data: 2, pace: 2, skills: 2, fund: 2, clear: 2 },
+    sigs: {}, notes: "", status: "assessed", created: today(), updated: today()
+  };
+}
+
+/* ---- Seed cases (verified against the engine) ---- */
+function seed(){
+  const mk = (over) => Object.assign(blankInitiative(0), over, { id: uid() });
+  return [
+    mk({
+      num: 1, name: "Product Catalogue Consolidation", sponsor: "Dir. Commercial Ops", area: "Business unit", driver: "grow", horizon: "quarter",
+      summary: "Consolidate three product catalogue systems into one unit-owned platform. Differentiating commercial capability, launch pace matters, integration points are published APIs rather than core estate.",
+      archetype: "tech", archetype2: "prop",
+      dims: { strategy: 4.8, capability: 4.5, benefits: 4.7, readiness: 4.5, risk: 4.3 },
+      flags: [],
+      gaps: [
+        { req: "Catalogue data stewardship in the unit", plan: "Second a data steward from group for two quarters while the unit hires", blocker: false },
+        { req: "Pricing engine integration pattern", plan: "Adopt the published group API, no bespoke adapter", blocker: false }
+      ],
+      read: { diff: 4, reuse: 1, legacy: 1, data: 1, pace: 3, skills: 3, fund: 3, clear: 3 },
+      sigs: { sponsor: 1, funding: 1, problem: 1, bowner: 1, relaunch: 0, collision: 0, governance: 1, urgency: 0 },
+      notes: "Strongest case this cycle. Watch scope drift toward the legacy CPQ boundary.",
+      status: "proposed"
+    }),
+    mk({
+      num: 2, name: "CPQ Replacement", sponsor: "Group CIO", area: "Cross-unit", driver: "save", horizon: "year",
+      summary: "Replace the configure-price-quote system used by every unit. High reuse across the group, moderate entanglement with billing, central delivery cadence acceptable.",
+      archetype: "tech", archetype2: "",
+      dims: { strategy: 4.2, capability: 3.8, benefits: 4.4, readiness: 3.9, risk: 3.6 },
+      flags: [],
+      gaps: [
+        { req: "Unit-level requirements baseline", plan: "Run a four-week cross-unit discovery before vendor shortlisting", blocker: false },
+        { req: "Billing integration capacity", plan: "Book the billing platform team's Q3 capacity now, it is the constraint", blocker: true }
+      ],
+      read: { diff: 1, reuse: 4, legacy: 2, data: 2, pace: 2, skills: 2, fund: 2, clear: 3 },
+      sigs: { sponsor: 1, funding: 0, problem: 1, bowner: 0, relaunch: -1, collision: 0, governance: 1, urgency: 0 },
+      notes: "Second relaunch attempt under a new name. The case is real but the history wants explaining in the proposal.",
+      status: "assessed"
+    }),
+    mk({
+      num: 3, name: "Excalibur CRM Decommission", sponsor: "TBC", area: "Group", driver: "save", horizon: "multi-year",
+      summary: "Decommission the legacy Excalibur CRM and migrate records to the strategic platform. Deep entanglement with systems of record, low differentiation, pace constrained by data migration.",
+      archetype: "tech", archetype2: "",
+      dims: { strategy: 4.0, capability: 3.5, benefits: 4.2, readiness: 3.4, risk: 3.0 },
+      flags: ["nobaseline"],
+      gaps: [
+        { req: "Named sponsor with budget authority", plan: "Escalate to the portfolio board, no sponsor means no proposal", blocker: true },
+        { req: "Data migration dry-run environment", plan: "Cost a synthetic-data rehearsal into the discovery phase", blocker: false }
+      ],
+      read: { diff: 0, reuse: 2, legacy: 4, data: 4, pace: 1, skills: 1, fund: 1, clear: 2 },
+      sigs: { sponsor: 0, funding: -1, problem: 0, bowner: -1, relaunch: -1, collision: -1, governance: 0, urgency: -1 },
+      notes: "Everyone agrees it should happen, nobody has put their name on it. Classic zombie signature, park until a sponsor exists.",
+      status: "assessed"
+    })
+  ];
+}
+
+/* ============================================================
+   UI ATOMS
+   ============================================================ */
 const { useState, useEffect, useMemo, useRef } = React;
 
-/* ============ ICONS ============ */
-const I = {
-  gate:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M3 21V8l9-5 9 5v13"/><path d="M3 13h18"/><path d="M9 21v-6h6v6"/></svg>,
-  grid:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>,
-  scan:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg>,
-  rank:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M3 17l4-4 4 4 7-7"/><path d="M3 21h18"/><path d="M14 7h7v7"/></svg>,
-  shield:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>,
-  pulse:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>,
-  waves:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M2 6c2 0 2 2 4 2s2-2 4-2 2 2 4 2 2-2 4-2 2 2 4 2"/><path d="M2 12c2 0 2 2 4 2s2-2 4-2 2 2 4 2 2-2 4-2 2 2 4 2"/><path d="M2 18c2 0 2 2 4 2s2-2 4-2 2 2 4 2 2-2 4-2 2 2 4 2"/></svg>,
-  compass:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><circle cx="12" cy="12" r="10"/><path d="m16 8-6 2-2 6 6-2 2-6z"/></svg>,
-  plus:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M12 5v14M5 12h14"/></svg>,
-  download:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>,
-  upload:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>,
-  trash:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>,
-  copy:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>,
-  check:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M20 6 9 17l-5-5"/></svg>,
-  warn:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>,
-  alert:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>,
-  code:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg>,
-  branch:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="8" r="2.5"/><path d="M6 8.5v7M8.4 7.2C12 8 13 10 15.6 9"/></svg>,
-  users:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>,
-  layers:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="m12 2 9 5-9 5-9-5 9-5z"/><path d="m3 12 9 5 9-5M3 17l9 5 9-5"/></svg>,
-  ship:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M3 13l9-4 9 4-9 4-9-4z"/><path d="M12 2v7M3 13v5l9 4 9-4v-5"/></svg>,
-  target:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4"/></svg>,
-  coins:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><ellipse cx="9" cy="6" rx="6" ry="3"/><path d="M3 6v6c0 1.7 2.7 3 6 3s6-1.3 6-3V6"/><path d="M3 12v6c0 1.7 2.7 3 6 3 1 0 2-.1 2.8-.3"/><circle cx="17" cy="15" r="4"/></svg>,
-  handshake:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="m11 17 2 2a1.4 1.4 0 0 0 2-2"/><path d="m14 16 2.5 2.5a1.4 1.4 0 0 0 2-2L14 12"/><path d="M3 11 8 6l3 3 3-3 6 5"/><path d="m3 11 4 4M7 15l-1 1a1.5 1.5 0 1 0 2 2l1-1"/></svg>,
-  heart:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M19 14c1.5-1.5 3-3.3 3-5.5A4.5 4.5 0 0 0 12 5 4.5 4.5 0 0 0 2 8.5c0 2.2 1.5 4 3 5.5l7 7z"/></svg>,
-  clipboard:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>,
-  flag:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg>,
-  swap:(p)=><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M3 8h14l-3-3M21 16H7l3 3"/></svg>,
-};
+const VCOLOR = { proceed:"var(--proceed)", caution:"var(--caution)", hold:"var(--hold)", reject:"var(--reject)" };
 
-/* ============ MODEL ============ */
-const STATUSES = [
-  { id:"Proposed", color:"#7C8DB0" }, { id:"Assessed", color:"#56B0F4" },
-  { id:"Prioritised", color:"#A78BFA" }, { id:"Approved", color:"#2DD4BF" },
-  { id:"In delivery", color:"#FBBF24" }, { id:"Released", color:"#34D399" },
-  { id:"Realised", color:"#22C55E" }, { id:"Parked", color:"#94A3B8" }, { id:"Rejected", color:"#F87171" },
-];
-const statusColor = (s)=> (STATUSES.find(x=>x.id===s)||{}).color || "#7C8DB0";
-const TYPES = [
-  { id:"Process", color:"#56B0F4" }, { id:"Technology", color:"#2DD4BF" },
-  { id:"Organisational", color:"#A78BFA" }, { id:"Regulatory", color:"#FB923C" }, { id:"Customer", color:"#F472B6" },
-];
-const typeColor = (t)=> (TYPES.find(x=>x.id===t)||{}).color || "#56B0F4";
-const READINESS = [
-  { id:"codeBase", label:"Code base", icon:I.code, hi:"Own, decoupled code", lo:"Shared code, heavy alignment", blurb:"Shared code base makes decentralising harder and forces alignment on every change." },
-  { id:"functional", label:"Functional coverage", icon:I.grid, hi:"Single value stream", lo:"Cuts across many streams", blurb:"Apps that cut across value streams, products or tech are hard to split or assign." },
-  { id:"release", label:"Release planning", icon:I.ship, hi:"Release independently", lo:"Tightly coordinated release", blurb:"Some changes need tightly coordinated release; who and what can go live when." },
-  { id:"capabilities", label:"Capability & expertise", icon:I.users, hi:"Capacity in place", lo:"Islands of knowledge", blurb:"Need enough capacity and expertise; splitting resources creates islands of knowledge." },
-  { id:"partners", label:"External partners", icon:I.handshake, hi:"No external dependency", lo:"Contractual partner ties", blurb:"Many systems depend on external partners, with potential contractual constraints." },
-  { id:"operational", label:"Operational ownership", icon:I.shield, hi:"Clear single owner", lo:"No clear 24/7 owner", blurb:"Shared apps still need one owner accountable for stability and 24/7 support." },
-];
-const DIMS = [
-  { id:"alignment", label:"Strategic alignment", icon:I.target, blurb:"Fit to strategic goals / OKRs" },
-  { id:"value", label:"Business value", icon:I.coins, blurb:"Size and clarity of the benefit" },
-  { id:"reach", label:"Reach / breadth", icon:I.layers, blurb:"Teams, products and customers affected" },
-  { id:"feasibility", label:"Feasibility", icon:I.branch, blurb:"Technical and delivery confidence" },
-];
-const DEFAULT_WEIGHTS = { alignment:30, value:28, reach:14, feasibility:13, readiness:15 };
-const SIGNALS = [
-  { id:"peopleSide", q:"Is there an engagement / adoption plan for the people impacted?", rel:"high", src:"Prosci: employee resistance is the #1 obstacle to change" },
-  { id:"sponsor", q:"Named business owner AND change manager / sponsor in place?", rel:"high", src:"Change Lean Canvas — ownership clarity" },
-  { id:"options", q:"Was an options analysis done before jumping to a solution?", rel:"medium", src:"Pain point: rushing to detail without options analysis" },
-  { id:"benefit", q:"Is the benefit quantified with a baseline (not just asserted)?", rel:"medium", src:"Capability roadmaps — qualify the why" },
-  { id:"dependency", q:"Does delivery require coordinating multiple tribes / BAU teams?", rel:"medium", src:"SIMPLIFY — cross-stream coordination raises risk" },
-  { id:"partnerRisk", q:"Is there a hard external-partner or contractual dependency?", rel:"medium", src:"SIMPLIFY — external partner constraints" },
-  { id:"release", q:"Does it need a tightly coordinated (non-independent) release?", rel:"low", src:"SIMPLIFY — coordinated release planning" },
-  { id:"capacity", q:"Is delivery capacity actually reserved / committed?", rel:"medium", src:"SIMPLIFY — reserved BAU capacity must be agreed" },
-  { id:"metrics", q:"Are in-life success metrics defined to confirm done?", rel:"low", src:"Continuous delivery — in-life metrics confirm done" },
-];
-const REL_W = { high:3, medium:2, low:1 };
-const ADKAR = [
-  { id:"awareness", label:"Awareness", q:"Do they understand why the change is happening?" },
-  { id:"desire", label:"Desire", q:"Are they motivated to support and take part?" },
-  { id:"knowledge", label:"Knowledge", q:"Do they know how to change (skills, process)?" },
-  { id:"ability", label:"Ability", q:"Can they actually perform in the new way?" },
-  { id:"reinforcement", label:"Reinforcement", q:"Is the change being sustained and reinforced?" },
-];
-const ADKAR_FIX = {
-  Awareness:{ kind:"Communication cadence", actions:["Leadership messaging on the why and the risk of not changing","Town halls and Q&A for impacted groups","Repeat the message through channels people trust"] },
-  Desire:{ kind:"Leadership coaching", actions:["Active, visible sponsorship across the coalition","Tailor the what's-in-it-for-me per group","Surface and address resistance one to one"] },
-  Knowledge:{ kind:"Training schedule", actions:["Role-based training booked ahead of go-live","Job aids and quick-reference guides","Process walk-throughs and knowledge sessions"] },
-  Ability:{ kind:"Coaching & practice", actions:["Hands-on practice in a sandbox","Super-users / floor-walkers during cutover","Performance support through hypercare"] },
-  Reinforcement:{ kind:"Reinforcement mechanisms", actions:["Track adoption and success metrics","Recognise and reward the new behaviours","Audit, correct backsliding, embed in BAU"] },
-};
-const IMPACT_DIMS = [ {id:"processes",label:"Processes"}, {id:"technologies",label:"Technologies"}, {id:"roles",label:"Roles"}, {id:"culture",label:"Culture"} ];
-const SEV = { "":0, "L":1, "M":2, "H":3 };
-const SEV_NEXT = { "":"L", "L":"M", "M":"H", "H":"" };
-const TIME_Q = {
-  Invest:{ color:"#34D399", desc:"High value, healthy fit. Fund and grow it." },
-  Migrate:{ color:"#FBBF24", desc:"High value, poor fit. Modernise or replatform." },
-  Tolerate:{ color:"#56B0F4", desc:"Low value, healthy. Leave alone, minimal spend." },
-  Eliminate:{ color:"#F87171", desc:"Low value, poor fit. Retire and decommission." },
-};
-const SIXR = {
-  Rehost:"Lift and shift as-is to new infrastructure",
-  Replatform:"Lift and tweak; small optimisations, no rewrite",
-  Refactor:"Re-architect for cloud-native / modern stack",
-  Repurchase:"Replace with a SaaS or COTS product",
-  Retire:"Decommission; no longer needed",
-  Retain:"Keep as-is for now; revisit later",
-};
-const MOSCOW = [ {id:"Must",label:"Must have",color:"#F87171"}, {id:"Should",label:"Should have",color:"#FBBF24"}, {id:"Could",label:"Could have",color:"#56B0F4"}, {id:"Wont",label:"Won't (this time)",color:"#7C8DB0"} ];
-const WAVES = ["Unassigned","Wave 1","Wave 2","Wave 3","Wave 4"];
-
-/* ============ ENGINE ============ */
-function recommendModel(c){
-  const r=c.readiness||{};
-  const vals=READINESS.map(a=> typeof r[a.id]==="number"? r[a.id]:2);
-  const indep=vals.reduce((a,b)=>a+b,0)/vals.length;
-  const releaseOk=(r.release??2)>=3, newCommon=!!c.newCommonComponent, legacyDep=!!c.legacyDependency;
-  let ownership,model,modelName,why;
-  if(legacyDep&&!newCommon){ ownership="Central — legacy"; model="c"; modelName="Coordinated VS / TA + BAU"; why="Depends on the legacy stack, so a central BAU team owns release; tribes coordinate via reserved capacity."; }
-  else if(newCommon){ ownership="Central — new"; model="b"; modelName="Coordinated VS + TA tribes"; why="A new common component that enables other teams — owned by a Tech Accelerator tribe, synced with value streams."; }
-  else if(indep>=3.0&&releaseOk){ ownership="Independent"; model="a"; modelName="Independent value-stream delivery"; why="Decoupled and release-ready: one tribe can develop and release on its own."; }
-  else if(indep>=2.2){ ownership="Shared"; model="a"; modelName="Independent value-stream delivery"; why="One tribe owns and releases; others may develop, but release stays with the owner."; }
-  else { ownership="Central — legacy"; model="c"; modelName="Coordinated VS / TA + BAU"; why="Low readiness and tight coupling: coordinate delivery with BAU under reserved capacity."; }
-  return { ownership, model, modelName, why, indep };
-}
-function adkarProfile(c){
-  const a=c.adkar||{};
-  const scored=ADKAR.filter(x=>typeof a[x.id]==="number"&&a[x.id]>0);
-  const assessed=scored.length>=3;
-  const score100=scored.length? Math.round(scored.reduce((s,x)=>s+a[x.id],0)/(scored.length*5)*100):0;
-  let barrier=null;
-  for(const x of ADKAR){ const v=a[x.id]; if(typeof v==="number"&&v>0&&v<=3){ barrier=x.label; break; } }
-  const weak=ADKAR.filter(x=>typeof a[x.id]==="number"&&a[x.id]>0&&a[x.id]<=3).map(x=>x.label);
-  return { assessed, score100, barrier, weak, vals:ADKAR.map(x=>a[x.id]||0) };
-}
-function impactProfile(c){
-  const groups=c.impactGroups||[];
-  let sumSev=0,cells=0;
-  groups.forEach(g=>IMPACT_DIMS.forEach(d=>{const s=SEV[g[d.id]||""]; if(s>0){sumSev+=s;cells++;}}));
-  const assessed=cells>0;
-  const avgSev=cells? sumSev/cells:0;
-  const breadth=Math.min(1,groups.length/5);
-  const index100=assessed? Math.round((0.65*(avgSev/3)+0.35*breadth)*100):0;
-  const derived=avgSev>=2.5?"H":avgSev>=1.5?"M":avgSev>0?"L":"";
-  const overall=c.overallRisk||derived;
-  return { assessed, index100, overall, groupsCount:groups.length, avgSev };
-}
-function timeDisposition(c){
-  const value=c.scores?.value??3;
-  const r=c.readiness||{}; const rv=READINESS.map(a=>typeof r[a.id]==="number"?r[a.id]:2);
-  const techHealth=typeof c.technicalHealth==="number"? c.technicalHealth : rv.reduce((a,b)=>a+b,0)/rv.length;
-  let q; const vHigh=value>=3, hHigh=techHealth>=2;
-  if(vHigh&&hHigh)q="Invest"; else if(vHigh&&!hHigh)q="Migrate"; else if(!vHigh&&hHigh)q="Tolerate"; else q="Eliminate";
-  if(c.timeOverride) q=c.timeOverride;
-  const sug={Invest:"Refactor",Migrate:"Replatform",Tolerate:"Retain",Eliminate:"Retire"}[q];
-  return { quadrant:q, value, techHealth, suggested6R:sug, sixR:c.sixR||sug };
-}
-function mitigations(c){ return adkarProfile(c).weak.map(label=>({label, ...ADKAR_FIX[label]})); }
-function benefitIndex(c){ const s=c.scores||{}; const v=(0.45*(s.value??3)+0.30*(s.reach??3)+0.25*(s.alignment??3)); return Math.round((v-1)/4*100); }
-function effortIndex(c){ const e=c.rice&&c.rice.effort; const known=typeof e==="number"&&e>0; const val=known? Math.min(24,e):12; return { v:Math.round(val/24*100), known }; }
-function riskModel(c){
-  const sig=c.signals||{}; let pen=0,max=0,answered=0;
-  SIGNALS.forEach(g=>{const r=REL_W[g.rel]; max+=r; const v=sig[g.id]; if(v)answered++; if(v==="concerning")pen+=r; else if(v==="neutral")pen+=r*0.4;});
-  const signalRisk=max? pen/max:null, signalsAssessed=answered>=4;
-  const ap=adkarProfile(c);
-  const peopleRisk=ap.assessed? Math.min(1,(1-ap.score100/100)+(ap.barrier?0.12:0)):null;
-  const ip=impactProfile(c);
-  const impactRisk=ip.assessed? ({H:0.7,M:0.45,L:0.2}[ip.overall]??0.4):null;
-  const parts=[];
-  if(signalRisk!=null)parts.push([signalRisk,0.45]);
-  if(peopleRisk!=null)parts.push([peopleRisk,0.35]);
-  if(impactRisk!=null)parts.push([impactRisk,0.20]);
-  let riskFactor=0;
-  if(parts.length){ const tw=parts.reduce((a,p)=>a+p[1],0); riskFactor=parts.reduce((a,p)=>a+p[0]*p[1],0)/tw; }
-  return { riskFactor, signalsAssessed, adkar:ap, impact:ip };
-}
-function metrics(c, weights){
-  const w=weights||DEFAULT_WEIGHTS;
-  const r=c.readiness||{}; const rv=READINESS.map(a=>typeof r[a.id]==="number"?r[a.id]:2);
-  const readiness100=Math.round(rv.reduce((a,b)=>a+b,0)/(rv.length*4)*100);
-  const readiness5=+(readiness100/100*4+1).toFixed(2);
-  const s=c.scores||{}; const g=(k)=> typeof s[k]==="number"? s[k]:3;
-  const parts={ alignment:g("alignment"), value:g("value"), reach:g("reach"), feasibility:g("feasibility"), readiness:readiness5 };
-  const totW=Object.values(w).reduce((a,b)=>a+b,0)||1;
-  let base=0; for(const k in parts) base+=parts[k]*(w[k]||0); base=base/totW;
-  const rm=riskModel(c);
-  const penalty=rm.riskFactor*0.9;
-  const priority=Math.max(1,+(base-penalty).toFixed(2));
-  let verdict,vKey;
-  if(priority>=4.2){verdict="Proceed now";vKey="proceed";} else if(priority>=3.5){verdict="Proceed";vKey="proceed";}
-  else if(priority>=2.8){verdict="Proceed with caveats";vKey="caution";} else if(priority>=2.0){verdict="Hold";vKey="hold";}
-  else {verdict="Reject / rethink";vKey="reject";}
-  const anyAssessed=rm.signalsAssessed||rm.adkar.assessed||rm.impact.assessed;
-  let tier,tierKey;
-  if(!anyAssessed){tier="Not yet assessed";tierKey="info";}
-  else if(rm.riskFactor<0.25){tier="Robust";tierKey="proceed";}
-  else if(rm.riskFactor<0.5){tier="Proceed with caution";tierKey="caution";}
-  else {tier="Fragile";tierKey="reject";}
-  const ri=c.rice||{}; const rice=(+ri.effort>0)? +(((+ri.reach||0)*(+ri.impact||0)*((+ri.confidence||0)/100))/(+ri.effort)).toFixed(1):0;
-  const eff=effortIndex(c);
-  return { readiness100, readiness5, parts, base:+base.toFixed(2), priority, verdict, vKey, riskFactor:rm.riskFactor, tier, tierKey,
-    rice, rec:recommendModel(c), people100:rm.adkar.score100, peopleAssessed:rm.adkar.assessed, barrier:rm.adkar.barrier,
-    impact100:rm.impact.index100, impactAssessed:rm.impact.assessed, impactOverall:rm.impact.overall,
-    time:timeDisposition(c), benefitIndex:benefitIndex(c), effortIndex:eff.v, effortKnown:eff.known };
-}
-const VKEY_COLOR={ proceed:"--proceed", caution:"--caution", hold:"--hold", reject:"--reject", info:"--info" };
-function cssVar(k){ return getComputedStyle(document.documentElement).getPropertyValue(k).trim(); }
-function phaseDone(c){
-  const ip=impactProfile(c), ap=adkarProfile(c);
-  return [
-    !!(c.name && c.futureState && ((c.fourPs&&c.fourPs.purpose)||c.rationale)),
-    ip.assessed || (c.impactGroups&&c.impactGroups.length>0),
-    ap.assessed,
-    !!(c.moscow && c.wave && c.wave!=="Unassigned"),
-  ];
-}
-
-/* ============ SEED ============ */
-function seed(){
-  const now=Date.now();
-  const mk=(o)=>({ id:o.id, createdAt:now, updatedAt:now, notes:"", preMortem:"", ...o });
-  return [
-    mk({ id:"chg-catalogue", name:"Product Catalogue — quote in 20 currencies", ref:"CHG-001", type:"Technology", status:"Prioritised",
-      owner:"Sales Capability lead", changeManager:"You", sponsor:"Director, Commercial",
-      fourPs:{ project:"Add multi-currency to the product catalogue and quoting", purpose:"Unblock multi-currency deals and cut quote time from 10h to 8h", particulars:"Q-based, catalogue + quoting apps, no legacy dependency", people:"Sales ops, Pricing, Finance, Bid desk" },
-      timeline:"This quarter", currentState:"Pricing/currency config is slow and manual; quotes GBP only.",
-      futureState:"Self-serve currency management; quote in 20 currencies.", rationale:"Clear quantified benefit and OKR link.",
-      stakeholders:"Sales ops, Pricing team, Finance, Bid desk", outcomes:"Minus 20% quote time; multi-currency deals unblocked", nextSteps:"Confirm capacity in next QAP",
-      newCommonComponent:false, legacyDependency:false, technicalHealth:3.4,
-      readiness:{codeBase:4,functional:3,release:4,capabilities:3,partners:4,operational:3},
-      scores:{alignment:5,value:4,reach:3,feasibility:4}, rice:{reach:60,impact:3,confidence:80,effort:5},
-      adkar:{awareness:4,desire:4,knowledge:4,ability:3,reinforcement:3},
-      impactGroups:[ {id:"g1",name:"Sales ops",processes:"M",technologies:"M",roles:"L",culture:"L"}, {id:"g2",name:"Bid desk",processes:"M",technologies:"L",roles:"M",culture:"L"} ],
-      overallRisk:"M", timeOverride:"", sixR:"", moscow:"Should", wave:"Wave 1",
-      signals:{peopleSide:"positive",sponsor:"positive",options:"positive",benefit:"positive",dependency:"positive",partnerRisk:"positive",release:"positive",capacity:"neutral",metrics:"positive"} }),
-    mk({ id:"chg-cpq", name:"CPQ — new common quoting component", ref:"CHG-002", type:"Technology", status:"Assessed",
-      owner:"Tech Accelerator tribe", changeManager:"You", sponsor:"Head of Platform",
-      fourPs:{ project:"Build a shared CPQ component all tribes consume", purpose:"Stop duplicated quoting logic; consistent quoting across products", particulars:"Multi-quarter platform build, cross value stream", people:"All VS tribes, Architecture, Catalogue, ServiceNow" },
-      timeline:"Two quarters", currentState:"Each value stream builds its own quoting logic.",
-      futureState:"One CPQ component every tribe consumes.", rationale:"Reusable platform capability on the DigiCo roadmap.",
-      stakeholders:"All VS tribes, Architecture, Product Catalogue, ServiceNow team", outcomes:"Reuse across streams; faster product onboarding", nextSteps:"Stand up TA squad; agree sync cadence",
-      newCommonComponent:true, legacyDependency:false, technicalHealth:2.2,
-      readiness:{codeBase:3,functional:1,release:2,capabilities:2,partners:3,operational:2},
-      scores:{alignment:4,value:4,reach:5,feasibility:3}, rice:{reach:90,impact:3,confidence:60,effort:13},
-      adkar:{awareness:4,desire:3,knowledge:2,ability:2,reinforcement:3},
-      impactGroups:[ {id:"g1",name:"VS tribes",processes:"M",technologies:"H",roles:"M",culture:"M"}, {id:"g2",name:"Architecture",processes:"L",technologies:"H",roles:"L",culture:"L"}, {id:"g3",name:"Bid desk",processes:"M",technologies:"M",roles:"M",culture:"L"} ],
-      overallRisk:"H", timeOverride:"", sixR:"", moscow:"Must", wave:"Wave 2",
-      signals:{peopleSide:"neutral",sponsor:"positive",options:"positive",benefit:"neutral",dependency:"concerning",partnerRisk:"positive",release:"concerning",capacity:"neutral",metrics:"neutral"} }),
-    mk({ id:"chg-excalibur", name:"Excalibur CRM — service journey enhancement", ref:"CHG-003", type:"Process", status:"Proposed",
-      owner:"BAU delivery team", changeManager:"You", sponsor:"Head of Service",
-      fourPs:{ project:"Improve the CRM service journey via coordinated BAU delivery", purpose:"Cut CRM change lead time and release clashes", particulars:"Legacy CRM, coordinated VS/TA + BAU, reserved capacity", people:"BAU delivery, Integration testing, Delivery hub, Service tribe" },
-      timeline:"Three quarters", currentState:"CRM change requests queue with a central BAU team; long lead times.",
-      futureState:"Coordinated delivery with reserved BAU capacity and a SPOC.", rationale:"Legacy CRM can't be decoupled yet.",
-      stakeholders:"BAU delivery team, Integration testing, Delivery hub, Service tribe", outcomes:"Lower CRM change lead time; fewer release clashes", nextSteps:"Reserve ~10% BAU capacity in QAP",
-      newCommonComponent:false, legacyDependency:true, technicalHealth:1.5,
-      readiness:{codeBase:1,functional:2,release:1,capabilities:2,partners:2,operational:3},
-      scores:{alignment:3,value:3,reach:3,feasibility:2}, rice:{reach:40,impact:2,confidence:50,effort:8},
-      adkar:{awareness:3,desire:2,knowledge:2,ability:2,reinforcement:1},
-      impactGroups:[ {id:"g1",name:"BAU delivery team",processes:"H",technologies:"M",roles:"H",culture:"M"}, {id:"g2",name:"Service tribe",processes:"M",technologies:"M",roles:"M",culture:"M"} ],
-      overallRisk:"H", timeOverride:"", sixR:"", moscow:"Could", wave:"Wave 3",
-      signals:{peopleSide:"concerning",sponsor:"neutral",options:"neutral",benefit:"concerning",dependency:"concerning",partnerRisk:"neutral",release:"concerning",capacity:"concerning",metrics:"concerning"} }),
-  ];
-}
-
-/* ============ PERSISTENCE ============ */
-const KEY="change-ops:v2";
-function loadState(){
-  try{
-    const raw=localStorage.getItem(KEY);
-    if(!raw){ const old=localStorage.getItem("change-ops:v1"); if(old){ const p=JSON.parse(old); return {ok:true,changes:p.changes||seed(),weights:p.weights||DEFAULT_WEIGHTS}; } return {ok:true,changes:seed(),weights:DEFAULT_WEIGHTS}; }
-    const p=JSON.parse(raw); return {ok:true,changes:p.changes||[],weights:p.weights||DEFAULT_WEIGHTS};
-  }catch(e){ return {ok:false,changes:seed(),weights:DEFAULT_WEIGHTS}; }
-}
-function saveState(changes,weights,ok){ if(!ok)return; try{ localStorage.setItem(KEY,JSON.stringify({changes,weights})); }catch(e){} }
-
-/* ============ UI PIECES ============ */
-function Field({label,hint,children}){ return <label className="fld"><div className="lab">{label}{hint&&<span className="hint">· {hint}</span>}</div>{children}</label>; }
-function Seg({value,onChange,min=0,max=4,risk=false}){
-  const arr=[]; for(let i=min;i<=max;i++)arr.push(i);
-  return <div className={"seg"+(risk?" risk":"")}>{arr.map(i=><button key={i} className={value===i?"on":""} onClick={()=>onChange(i)}>{i}</button>)}</div>;
-}
-function Rate({icon,title,desc,value,onChange,min=0,max=5}){ const Ic=icon;
-  return <div className="rate"><div className="top"><div className="ic"><Ic/></div><div style={{minWidth:0}}><div className="ttl">{title}</div><div className="desc">{desc}</div></div><div className="val">{value}</div></div>
-    <Seg value={value} onChange={onChange} min={min} max={max}/><div className="legend"><span>{min}</span><span>{max}</span></div></div>;
-}
-function Radar({values}){
-  const size=168,cx=size/2,cy=size/2,R=58,n=READINESS.length;
-  const ang=(i)=>(Math.PI*2*i/n)-Math.PI/2; const pt=(i,rad)=>[cx+Math.cos(ang(i))*rad,cy+Math.sin(ang(i))*rad];
-  const poly=values.map((v,i)=>pt(i,R*(v/4))).map(p=>p.join(",")).join(" ");
-  return <svg className="radar" width={size} height={size} viewBox={"0 0 "+size+" "+size}>
-    {[1,.66,.33].map((rr,k)=><polygon key={k} points={READINESS.map((_,i)=>pt(i,R*rr).join(",")).join(" ")} fill="none" stroke={cssVar("--line")} strokeWidth="1"/>)}
-    {READINESS.map((_,i)=>{const a=pt(i,R);return <line key={i} x1={cx} y1={cy} x2={a[0]} y2={a[1]} stroke={cssVar("--line")} strokeWidth="1"/>;})}
-    <polygon points={poly} fill="rgba(45,212,191,.22)" stroke={cssVar("--teal")} strokeWidth="2"/>
-    {values.map((v,i)=>{const a=pt(i,R*(v/4));return <circle key={i} cx={a[0]} cy={a[1]} r="2.6" fill={cssVar("--teal")}/>;})}
-    {READINESS.map((a,i)=>{const p=pt(i,R+13);return <text key={i} x={p[0]} y={p[1]} textAnchor="middle" dominantBaseline="middle">{a.label.split(" ")[0]}</text>;})}
-  </svg>;
-}
-function ScorePill({v}){ const c= v>=3.5?"--proceed": v>=2.8?"--caution": v>=2?"--hold":"--reject"; const bg= v>=3.5?"--proceed-bg": v>=2.8?"--caution-bg": v>=2?"--hold-bg":"--reject-bg";
-  return <span className="scorepill" style={{color:"var("+c+")",background:"var("+bg+")",border:"1px solid var("+c+")"}}>{v.toFixed(1)}</span>; }
-function Quadrant({xLabel,yLabel,corners,points,size=300}){
-  const pad=30, end=size-14, X=(v)=> pad+(v/100)*(end-pad), Y=(v)=> (size-24)-(v/100)*(size-24-12);
-  return <svg className="quad" width="100%" viewBox={"0 0 "+size+" "+size} style={{maxWidth:size}}>
-    <rect x={pad} y={12} width={end-pad} height={size-24-12} fill="none" stroke={cssVar("--line")} strokeWidth="1" rx="6"/>
-    <line x1={(pad+end)/2} y1={12} x2={(pad+end)/2} y2={size-24} stroke={cssVar("--line")} strokeDasharray="4 4"/>
-    <line x1={pad} y1={(12+size-24)/2} x2={end} y2={(12+size-24)/2} stroke={cssVar("--line")} strokeDasharray="4 4"/>
-    <text className="quadlab" x={pad+6} y={24}>{corners.tl}</text>
-    <text className="quadlab" x={end-6} y={24} textAnchor="end">{corners.tr}</text>
-    <text className="quadlab" x={pad+6} y={size-30}>{corners.bl}</text>
-    <text className="quadlab" x={end-6} y={size-30} textAnchor="end">{corners.br}</text>
-    <text x={(pad+end)/2} y={size-6} textAnchor="middle" style={{fontSize:9}}>{xLabel}</text>
-    <text x={11} y={(12+size-24)/2} textAnchor="middle" transform={"rotate(-90 11 "+((12+size-24)/2)+")"} style={{fontSize:9}}>{yLabel}</text>
-    {points.map((p,i)=><g key={i}><circle cx={X(p.x)} cy={Y(p.y)} r={p.r||6} fill={p.color} fillOpacity="0.9" stroke={cssVar("--bg")} strokeWidth="1.5"/>{p.label&&<title>{p.label}</title>}</g>)}
-  </svg>;
-}
-
-/* ============ GATE CARD ============ */
-function GateCard({c,m}){
-  const col="var("+VKEY_COLOR[m.vKey]+")"; const pct=(m.priority-1)/4; const r=64,circ=2*Math.PI*r,dash=circ*pct;
-  const mos=MOSCOW.find(x=>x.id===c.moscow);
-  return <div className="gate block"><div className="body">
-    <div className="dial"><svg width="150" height="150" viewBox="0 0 150 150">
-      <circle cx="75" cy="75" r={r} fill="none" stroke={cssVar("--line")} strokeWidth="10"/>
-      <circle cx="75" cy="75" r={r} fill="none" stroke={col} strokeWidth="10" strokeLinecap="round" strokeDasharray={dash+" "+(circ-dash)} transform="rotate(-90 75 75)"/>
-    </svg><div className="num"><b style={{color:col}}>{m.priority.toFixed(1)}</b><span>/ 5 PRIORITY</span></div></div>
-    <div style={{minWidth:0}}>
-      <div className="sec-eyebrow">Decision gate</div>
-      <div className="verdict-line" style={{marginTop:6}}>
-        <div className="verdict" style={{color:col}}>{m.verdict}</div>
-        <span className="vchip" style={{color:col,background:"color-mix(in srgb, "+col+" 14%, transparent)",border:"1px solid "+col}}>RISK {Math.round(m.riskFactor*100)}%</span>
-        <span className="vchip" style={{color:"var("+VKEY_COLOR[m.tierKey]+")",background:"var(--surface-2)",border:"1px solid var("+VKEY_COLOR[m.tierKey]+")"}}>{m.tier.toUpperCase()}</span>
-        {mos&&<span className="vchip" style={{color:mos.color,border:"1px solid "+mos.color,background:"var(--surface-2)"}}>{mos.label}</span>}
-      </div>
-      <div className="metstrip">
-        <div className="met"><div className="k">Tech readiness</div><div className="v">{m.readiness100}<small>%</small></div><div className="s">{m.rec.ownership} · {m.rec.model.toUpperCase()}</div></div>
-        <div className="met"><div className="k">People (ADKAR)</div><div className="v" style={{color:m.peopleAssessed?(m.barrier?"var(--caution)":"var(--proceed)"):"var(--faint)"}}>{m.peopleAssessed?m.people100:"—"}<small>{m.peopleAssessed?"%":""}</small></div><div className="s">{m.peopleAssessed?(m.barrier?("Barrier: "+m.barrier):"No barrier"):"Not assessed"}</div></div>
-        <div className="met"><div className="k">Impact index</div><div className="v" style={{color:m.impactAssessed?"var(--info)":"var(--faint)"}}>{m.impactAssessed?m.impact100:"—"}<small>{m.impactAssessed?"%":""}</small></div><div className="s">{m.impactAssessed?("Overall "+(m.impactOverall||"—")):"Not assessed"}</div></div>
-        <div className="met"><div className="k">Disposition</div><div className="v" style={{color:TIME_Q[m.time.quadrant].color,fontSize:16}}>{m.time.quadrant}</div><div className="s">{m.time.sixR} · RICE {m.rice}</div></div>
-      </div>
+function Dial({ value, color }){
+  const r = 36, c = 2 * Math.PI * r;
+  const frac = Math.max(0, Math.min(1, (value - 1) / 4));
+  return (
+    <div className="dial">
+      <svg width="88" height="88" viewBox="0 0 88 88">
+        <circle cx="44" cy="44" r={r} fill="none" stroke="var(--surface-2)" strokeWidth="8" />
+        <circle cx="44" cy="44" r={r} fill="none" stroke={color} strokeWidth="8" strokeLinecap="round"
+          strokeDasharray={c} strokeDashoffset={c * (1 - frac)} />
+      </svg>
+      <div className="num"><b style={{ color }}>{value.toFixed(1)}</b><small>OF 5</small></div>
     </div>
-  </div></div>;
+  );
 }
 
-/* ============ PHASE STEPPER ============ */
-function Stepper({phase,setPhase,done}){
-  const ph=[ {n:1,t:"Intake",d:"Envision & label"}, {n:2,t:"Impact",d:"Stakeholders & tech"}, {n:3,t:"Readiness",d:"ADKAR & mitigation"}, {n:4,t:"Prioritise",d:"Score & sequence"} ];
-  return <div className="stepper">{ph.map((p,i)=>
-    <button key={p.n} className={"step"+(phase===p.n?" active":"")+(done[i]?" done":"")} onClick={()=>setPhase(p.n)}>
-      <div className="sn">{done[i]&&phase!==p.n? <I.check/> : p.n}</div>
-      <div><div className="st">{p.t}</div><div className="sd">{p.d}</div></div>
-    </button>)}</div>;
+function Likert({ value, onChange }){
+  return (
+    <div className="lik">
+      {[0,1,2,3,4].map(n => (
+        <button key={n} type="button" className={value === n ? "on" : ""} onClick={() => onChange(n)}>{n}</button>
+      ))}
+    </div>
+  );
 }
 
-/* ---- Phase 1: Intake ---- */
-function P1Intake({c,patch}){
-  const fp=c.fourPs||{}; const setFp=(k,v)=>patch({fourPs:Object.assign({},fp,{[k]:v})});
-  return <div>
-    <div className="block"><div className="blockhead"><div className="bn"><I.compass/></div><div><h3>Envision &amp; intake</h3><p>Define the request with the Prosci 4 Ps, then label it. The why feeds scoring later.</p></div></div>
-    <div className="card cardpad">
-      <div className="two">
-        <Field label="Change name"><input className="inp" value={c.name} onChange={e=>patch({name:e.target.value})}/></Field>
-        <Field label="Reference"><input className="inp" value={c.ref||""} onChange={e=>patch({ref:e.target.value})}/></Field>
-      </div>
-      <div className="three">
-        <Field label="Type"><select className="inp" value={c.type} onChange={e=>patch({type:e.target.value})}>{TYPES.map(t=><option key={t.id}>{t.id}</option>)}</select></Field>
-        <Field label="Status"><select className="inp" value={c.status} onChange={e=>patch({status:e.target.value})}>{STATUSES.map(s=><option key={s.id}>{s.id}</option>)}</select></Field>
-        <Field label="Timeline"><input className="inp" value={c.timeline||""} onChange={e=>patch({timeline:e.target.value})} placeholder="e.g. this quarter"/></Field>
-      </div>
-      <hr className="hr" style={{margin:"6px 0 16px"}}/>
-      <div className="sec-eyebrow" style={{marginBottom:10}}>Prosci 4 Ps</div>
-      <div className="two">
-        <Field label="Project" hint="what is changing"><textarea className="inp" value={fp.project||""} onChange={e=>setFp("project",e.target.value)}/></Field>
-        <Field label="Purpose" hint="why — the benefit"><textarea className="inp" value={fp.purpose||""} onChange={e=>setFp("purpose",e.target.value)}/></Field>
-      </div>
-      <div className="two">
-        <Field label="Particulars" hint="when, where, scope"><textarea className="inp" value={fp.particulars||""} onChange={e=>setFp("particulars",e.target.value)}/></Field>
-        <Field label="People" hint="sponsor, owner, who's involved"><textarea className="inp" value={fp.people||""} onChange={e=>setFp("people",e.target.value)}/></Field>
-      </div>
-      <div className="three">
-        <Field label="Business owner"><input className="inp" value={c.owner||""} onChange={e=>patch({owner:e.target.value})}/></Field>
-        <Field label="Change manager"><input className="inp" value={c.changeManager||""} onChange={e=>patch({changeManager:e.target.value})}/></Field>
-        <Field label="Sponsor"><input className="inp" value={c.sponsor||""} onChange={e=>patch({sponsor:e.target.value})}/></Field>
-      </div>
-    </div></div>
-    <div className="block"><div className="blockhead"><div className="bn"><I.swap/></div><div><h3>Current vs future state</h3><p>Map as-is to to-be. The gap is what training and comms have to close.</p></div></div>
-    <div className="card cardpad">
-      <div className="two">
-        <Field label="Current state — as is"><textarea className="inp" value={c.currentState||""} onChange={e=>patch({currentState:e.target.value})}/></Field>
-        <Field label="Future state — to be"><textarea className="inp" value={c.futureState||""} onChange={e=>patch({futureState:e.target.value})}/></Field>
-      </div>
-      <Field label="Target outcomes"><textarea className="inp" value={c.outcomes||""} onChange={e=>patch({outcomes:e.target.value})}/></Field>
-    </div></div>
-  </div>;
+function Tri({ value, onChange }){
+  const opts = [
+    { v: 1,  cls: "pos", t: "Positive" },
+    { v: 0,  cls: "neu", t: "Neutral" },
+    { v: -1, cls: "con", t: "Concerning" }
+  ];
+  return (
+    <div className="tri">
+      {opts.map(o => (
+        <button key={o.v} type="button" className={o.cls + (value === o.v ? " on" : "")} onClick={() => onChange(o.v)}>{o.t}</button>
+      ))}
+    </div>
+  );
 }
 
-/* ---- Phase 2: Impact ---- */
-function P2Impact({c,patch,m}){
-  const groups=c.impactGroups||[];
-  const setGroups=(g)=>patch({impactGroups:g});
-  const addGroup=()=>setGroups(groups.concat([{id:"g"+Math.random().toString(36).slice(2,6),name:"New group",processes:"",technologies:"",roles:"",culture:""}]));
-  const setCell=(gid,dim)=>setGroups(groups.map(g=> g.id===gid? Object.assign({},g,{[dim]:SEV_NEXT[g[dim]||""]}):g));
-  const setName=(gid,v)=>setGroups(groups.map(g=> g.id===gid? Object.assign({},g,{name:v}):g));
-  const delGroup=(gid)=>setGroups(groups.filter(g=>g.id!==gid));
-  const setRead=(k,v)=>patch({readiness:Object.assign({},c.readiness||{},{[k]:v})});
-  const t=m.time;
-  return <div>
-    <div className="block"><div className="blockhead"><div className="bn"><I.grid/></div><div style={{flex:1}}><h3>Change impact matrix</h3><p>Impacted groups against severity (L/M/H) across processes, technologies, roles and culture. Tap a cell to cycle.</p></div><button className="btn subtle" onClick={addGroup} style={{padding:"6px 11px"}}><I.plus/> Group</button></div>
-    <div className="card cardpad scrollx">
-      {groups.length===0? <p className="muted" style={{margin:0,fontSize:13}}>No groups yet. Add the departments, roles or employee groups this change touches.</p> :
-      <table className="imatrix"><thead><tr><th className="grp">Stakeholder group</th>{IMPACT_DIMS.map(d=><th key={d.id}>{d.label}</th>)}<th></th></tr></thead>
-      <tbody>{groups.map(g=>
-        <tr key={g.id}>
-          <td className="gname" style={{minWidth:180}}><input value={g.name} onChange={e=>setName(g.id,e.target.value)}/></td>
-          {IMPACT_DIMS.map(d=><td key={d.id} style={{textAlign:"center"}}><button className={"sevcell "+(g[d.id]||"")} onClick={()=>setCell(g.id,d.id)}>{g[d.id]||"·"}</button></td>)}
-          <td><button className="iconbtn sm" onClick={()=>delGroup(g.id)}><I.trash/></button></td>
-        </tr>)}</tbody></table>}
-      <div style={{marginTop:14,marginBottom:6,fontSize:12,fontWeight:600,color:"var(--ink-2)"}}>Overall disruption risk</div>
-      <div className="seg" style={{maxWidth:280}}>
-        {["L","M","H"].map(s=><button key={s} className={(c.overallRisk||"")===s?"on":""} onClick={()=>patch({overallRisk:s})} style={(c.overallRisk||"")===s?{background:s==="H"?"var(--reject)":s==="M"?"var(--caution)":"var(--proceed)",color:"#04231f"}:{}}>{s}</button>)}
-      </div>
-      <div className="row" style={{marginTop:12}}><span className="tag" style={{color:"var(--info)",borderColor:"var(--info)"}}>Impact index {m.impact100}%</span><span className="tag">{groups.length} group(s)</span></div>
-    </div></div>
-    <div className="block"><div className="blockhead"><div className="bn"><I.shield/></div><div><h3>Technology readiness &amp; delivery model</h3><p>Rate each axis 0–4. Drives the ownership and delivery-model recommendation.</p></div></div>
-    <div className="card cardpad">
-      <div className="radar-wrap" style={{marginBottom:16}}>
-        <Radar values={READINESS.map(a=>(c.readiness&&typeof c.readiness[a.id]==="number"?c.readiness[a.id]:2))}/>
-        <div style={{minWidth:200,flex:1}}>
-          <div className="sec-eyebrow">Recommendation</div>
-          <div style={{fontFamily:"var(--disp)",fontWeight:700,fontSize:20,margin:"6px 0 2px"}}>{m.rec.ownership}</div>
-          <div className="muted" style={{fontSize:13}}>Model <b style={{color:"var(--teal)",fontFamily:"var(--mono)"}}>{m.rec.model.toUpperCase()}</b> — {m.rec.modelName}</div>
-          <p className="muted" style={{fontSize:12.5,lineHeight:1.5,marginTop:8}}>{m.rec.why}</p>
+function Card({ tag, title, right, children }){
+  return (
+    <div className="card">
+      <div className="card-h">
+        <h3>{title}</h3>
+        <div className="row" style={{ gap: 8 }}>
+          {right}
+          {tag ? <span className="block-tag">{tag}</span> : null}
         </div>
       </div>
-      <div className="grid" style={{gridTemplateColumns:"1fr 1fr"}}>
-        {READINESS.map(a=><div key={a.id} className="rate"><div className="top"><div className="ic"><a.icon/></div><div style={{minWidth:0}}><div className="ttl">{a.label}</div><div className="desc">{a.blurb}</div></div><div className="val">{c.readiness&&typeof c.readiness[a.id]==="number"?c.readiness[a.id]:2}</div></div><Seg value={c.readiness&&typeof c.readiness[a.id]==="number"?c.readiness[a.id]:2} onChange={v=>setRead(a.id,v)} max={4}/><div className="legend"><span>{a.lo}</span><span>{a.hi}</span></div></div>)}
-      </div>
-      <hr className="hr" style={{margin:"16px 0"}}/>
-      <div className="row">
-        <label className="row" style={{gap:8,cursor:"pointer",fontSize:13}}><input type="checkbox" checked={!!c.newCommonComponent} onChange={e=>patch({newCommonComponent:e.target.checked})} style={{accentColor:cssVar("--teal")}}/> New common component (enables other teams)</label>
-        <label className="row" style={{gap:8,cursor:"pointer",fontSize:13}}><input type="checkbox" checked={!!c.legacyDependency} onChange={e=>patch({legacyDependency:e.target.checked})} style={{accentColor:cssVar("--teal")}}/> Hard dependency on the legacy stack</label>
-        <span className="faint" style={{fontSize:11.5}}>· DigiCo ownership criteria</span>
-      </div>
-    </div></div>
-    <div className="block"><div className="blockhead"><div className="bn"><I.layers/></div><div><h3>Application disposition</h3><p>Gartner TIME from value × technical health, with the matching cloud 6R approach.</p></div></div>
-    <div className="card cardpad">
-      <div className="radar-wrap">
-        <Quadrant size={260} xLabel="Technical health" yLabel="Business value"
-          corners={{tl:"Migrate",tr:"Invest",bl:"Eliminate",br:"Tolerate"}}
-          points={[{x:Math.min(100,t.techHealth/4*100),y:(t.value-1)/4*100,color:TIME_Q[t.quadrant].color,r:9,label:t.quadrant}]}/>
-        <div style={{minWidth:220,flex:1}}>
-          <div className="sec-eyebrow">TIME quadrant</div>
-          <div style={{fontFamily:"var(--disp)",fontWeight:700,fontSize:22,margin:"6px 0 2px",color:TIME_Q[t.quadrant].color}}>{t.quadrant}</div>
-          <p className="muted" style={{fontSize:12.5,lineHeight:1.5,margin:"0 0 12px"}}>{TIME_Q[t.quadrant].desc}</p>
-          <Field label="Override TIME quadrant"><select className="inp" value={c.timeOverride||""} onChange={e=>patch({timeOverride:e.target.value})}><option value="">Auto ({t.quadrant})</option>{Object.keys(TIME_Q).map(k=><option key={k}>{k}</option>)}</select></Field>
-          <Field label="Cloud modernisation (6Rs)" hint={"suggested: "+t.suggested6R}><select className="inp" value={c.sixR||""} onChange={e=>patch({sixR:e.target.value})}><option value="">Suggested ({t.suggested6R})</option>{Object.keys(SIXR).map(k=><option key={k}>{k}</option>)}</select></Field>
-          <p className="faint" style={{fontSize:11.5,margin:0}}>{SIXR[t.sixR]}</p>
-        </div>
-      </div>
-    </div></div>
-  </div>;
+      <div className="card-b">{children}</div>
+    </div>
+  );
 }
 
-/* ---- Phase 3: Readiness (ADKAR) ---- */
-function P3Readiness({c,patch,m}){
-  const a=c.adkar||{}; const setA=(k,v)=>patch({adkar:Object.assign({},a,{[k]:v})});
-  const ap=adkarProfile(c); const mits=mitigations(c);
-  return <div>
-    <div className="block"><div className="blockhead"><div className="bn"><I.heart/></div><div><h3>ADKAR readiness</h3><p>Score each element 1–5 for the impacted population. The barrier point is the first element scoring 3 or below.</p></div></div>
-    <div className="card cardpad">
-      <div style={{marginBottom:6}}>
-        {ADKAR.map(x=>{ const v=a[x.id]||0; const isBar=ap.barrier===x.label;
-          return <div key={x.id} style={{marginBottom:12}}>
-            <div className="row" style={{justifyContent:"space-between",marginBottom:6}}>
-              <div><span style={{fontWeight:600,fontSize:13}}>{x.label}</span> {isBar&&<span className="chip2" style={{color:"var(--caution)",borderColor:"var(--caution)",marginLeft:6}}><I.flag/> Barrier</span>}<div className="faint" style={{fontSize:11.5,marginTop:1}}>{x.q}</div></div>
-              <div style={{fontFamily:"var(--mono)",fontWeight:700,fontSize:15}}>{v||"—"}</div>
+function StatusChip({ m }){
+  return <span className={"chip " + m.verdict.cls}>{m.verdict.label}</span>;
+}
+
+/* ============================================================
+   ASSESS VIEW (Blocks A-G, live gate verdict)
+   ============================================================ */
+function AssessView({ draft, setDraft, onSave, onDelete, isNew, toast }){
+  const m = useMemo(() => metrics(draft), [draft]);
+  const det = useMemo(() => detectArchetype((draft.name || "") + " " + (draft.summary || "")), [draft.name, draft.summary]);
+  const set = (k, v) => setDraft(d => Object.assign({}, d, { [k]: v }));
+  const setDim = (k, v) => setDraft(d => Object.assign({}, d, { dims: Object.assign({}, d.dims, { [k]: v }) }));
+  const setRead = (k, v) => setDraft(d => Object.assign({}, d, { read: Object.assign({}, d.read, { [k]: v }) }));
+  const setSig = (k, v) => setDraft(d => Object.assign({}, d, { sigs: Object.assign({}, d.sigs, { [k]: v }) }));
+  const toggleFlag = (id) => setDraft(d => {
+    const has = (d.flags || []).includes(id);
+    return Object.assign({}, d, { flags: has ? d.flags.filter(x => x !== id) : [...(d.flags || []), id] });
+  });
+  const setGap = (i, k, v) => setDraft(d => {
+    const gaps = d.gaps.map((g, j) => j === i ? Object.assign({}, g, { [k]: v }) : g);
+    return Object.assign({}, d, { gaps });
+  });
+  const addGap = () => setDraft(d => Object.assign({}, d, { gaps: [...(d.gaps || []), { req: "", plan: "", blocker: false }] }));
+  const rmGap = (i) => setDraft(d => Object.assign({}, d, { gaps: d.gaps.filter((_, j) => j !== i) }));
+  const archLabel = id => (ARCHETYPES.find(a => a.id === id) || {}).label || "";
+
+  return (
+    <div className="assess-grid">
+      <div className="stack">
+
+        <Card tag="BLOCK A" title="Change summary">
+          <div className="grid2">
+            <div>
+              <label className="f-label">Initiative name</label>
+              <input className="f-input" value={draft.name} onChange={e => set("name", e.target.value)} placeholder="e.g. Product Catalogue Consolidation" />
             </div>
-            <Seg value={v} onChange={vv=>setA(x.id,vv)} min={1} max={5}/>
-          </div>; })}
-      </div>
-      <hr className="hr" style={{margin:"6px 0 14px"}}/>
-      <div className="row">
-        <span className="tag" style={{color:ap.assessed?(ap.barrier?"var(--caution)":"var(--proceed)"):"var(--faint)",borderColor:ap.assessed?(ap.barrier?"var(--caution)":"var(--proceed)"):"var(--line)"}}>ADKAR score {ap.assessed?ap.score100+"%":"not assessed"}</span>
-        {ap.barrier&&<span className="tag" style={{color:"var(--caution)",borderColor:"var(--caution)"}}>Barrier point: {ap.barrier}</span>}
-      </div>
-    </div></div>
-    {ap.barrier&&<div className="callout"><I.warn/><div><b>{ap.barrier} is the barrier point.</b> ADKAR is sequential, so effort spent further down the chain is wasted until this is lifted. Work the mitigation below before pressing on.</div></div>}
-    <div className="block"><div className="blockhead"><div className="bn"><I.clipboard/></div><div><h3>Mitigation plan</h3><p>{mits.length? "Auto-generated from the weak ADKAR elements. Refine into your change plan." : "No weak elements flagged. Score ADKAR above to generate targeted actions."}</p></div></div>
-    <div className="card cardpad">
-      {mits.length? mits.map(mt=><div key={mt.label} className="mitcard"><div className="mh"><span className="badge">{mt.kind}</span><h4>{mt.label}</h4></div><ul>{mt.actions.map((ac,i)=><li key={i}>{ac}</li>)}</ul></div>)
-        : <p className="muted" style={{margin:"0 0 14px",fontSize:13}}>Nothing to mitigate yet — either readiness is strong across the board, or ADKAR hasn't been scored.</p>}
-      <Field label="Change-plan notes"><textarea className="inp" value={c.notes||""} onChange={e=>patch({notes:e.target.value})} placeholder="Training dates, comms cadence, coaching owners..."/></Field>
-    </div></div>
-  </div>;
-}
+            <div>
+              <label className="f-label">Sponsor</label>
+              <input className="f-input" value={draft.sponsor} onChange={e => set("sponsor", e.target.value)} placeholder="Named person with budget authority" />
+            </div>
+            <div>
+              <label className="f-label">Area</label>
+              <input className="f-input" value={draft.area} onChange={e => set("area", e.target.value)} placeholder="Business unit / Cross-unit / Group" />
+            </div>
+            <div>
+              <label className="f-label">Driver</label>
+              <select className="f-select" value={draft.driver} onChange={e => set("driver", e.target.value)}>
+                <option value="grow">Grow revenue</option>
+                <option value="save">Save cost</option>
+                <option value="comply">Comply with mandate</option>
+                <option value="fix">Fix a broken thing</option>
+              </select>
+            </div>
+            <div>
+              <label className="f-label">Horizon</label>
+              <select className="f-select" value={draft.horizon} onChange={e => set("horizon", e.target.value)}>
+                <option value="quarter">This quarter</option>
+                <option value="year">This year</option>
+                <option value="multi-year">Multi-year</option>
+              </select>
+            </div>
+          </div>
+          <div style={{ marginTop: 12 }}>
+            <label className="f-label">One-paragraph summary (TL;DR)</label>
+            <textarea className="f-area" value={draft.summary} onChange={e => set("summary", e.target.value)} placeholder="What changes, for whom, and why now. The archetype detector reads this." />
+            <div className="arch-hint">
+              {det.primary
+                ? <span>Detected archetype: <b>{det.primary.label}</b>{det.secondary ? <span>, hybrid with <b>{det.secondary.label}</b></span> : null}.{" "}
+                    {draft.archetype !== det.primary.id
+                      ? <button className="btn ghost sm" type="button" onClick={() => { set("archetype", det.primary.id); if (det.secondary) set("archetype2", det.secondary.id); }}>Use detection</button>
+                      : <span>Applied.</span>}
+                  </span>
+                : <span>Write the summary and the archetype detector will classify it, or pick one below.</span>}
+            </div>
+          </div>
+          <div style={{ marginTop: 12 }}>
+            <label className="f-label">Archetype</label>
+            <div className="arch">
+              {ARCHETYPES.map(a => (
+                <button key={a.id} type="button" className={draft.archetype === a.id ? "on" : ""} onClick={() => set("archetype", draft.archetype === a.id ? "" : a.id)}>{a.label}</button>
+              ))}
+            </div>
+            {draft.archetype2 ? <div className="arch-hint">Hybrid secondary: <b>{archLabel(draft.archetype2)}</b></div> : null}
+          </div>
+        </Card>
 
-/* ---- Phase 4: Prioritise (per change) ---- */
-function P4Prioritise({c,patch,m}){
-  const setScore=(k,v)=>patch({scores:Object.assign({},c.scores||{},{[k]:v})});
-  const setRice=(k,v)=>patch({rice:Object.assign({},c.rice||{},{[k]:v})});
-  const advice = m.benefitIndex>=50&&m.effortIndex<50?"A quick win — pull it forward.":m.benefitIndex>=50?"High impact but heavy — plan it as a project.":m.effortIndex<50?"Low impact, low effort — a fill-in.":"Low impact, high effort — deprioritise.";
-  return <div>
-    <div className="block"><div className="blockhead"><div className="bn"><I.target/></div><div><h3>Priority inputs</h3><p>Rate each dimension 1–5. Combined with readiness and weighted in the portfolio.</p></div></div>
-    <div className="card cardpad"><div className="grid" style={{gridTemplateColumns:"1fr 1fr"}}>{DIMS.map(d=><Rate key={d.id} icon={d.icon} title={d.label} desc={d.blurb} value={c.scores&&typeof c.scores[d.id]==="number"?c.scores[d.id]:3} onChange={v=>setScore(d.id,v)} min={1} max={5}/>)}</div>
-      <hr className="hr" style={{margin:"18px 0 14px"}}/>
-      <div className="sec-eyebrow">RICE</div><p className="muted" style={{fontSize:12,margin:"4px 0 12px"}}>Reach × Impact × Confidence ÷ Effort. Effort also drives the Impact/Effort matrix.</p>
-      <div className="grid" style={{gridTemplateColumns:"repeat(4,1fr)"}}>
-        <Field label="Reach" hint="people/qtr"><input className="inp" type="number" value={c.rice&&c.rice.reach!=null?c.rice.reach:0} onChange={e=>setRice("reach",+e.target.value)}/></Field>
-        <Field label="Impact" hint="0.25–3"><input className="inp" type="number" step="0.25" value={c.rice&&c.rice.impact!=null?c.rice.impact:0} onChange={e=>setRice("impact",+e.target.value)}/></Field>
-        <Field label="Confidence" hint="%"><input className="inp" type="number" value={c.rice&&c.rice.confidence!=null?c.rice.confidence:0} onChange={e=>setRice("confidence",+e.target.value)}/></Field>
-        <Field label="Effort" hint="person-mo"><input className="inp" type="number" step="0.5" value={c.rice&&c.rice.effort!=null?c.rice.effort:1} onChange={e=>setRice("effort",+e.target.value)}/></Field>
+        <Card tag="BLOCK B" title="Capability match and gaps" right={<button className="btn sm" type="button" onClick={addGap}>+ Add gap</button>}>
+          <p className="f-hint" style={{ marginTop: 0, marginBottom: 12 }}>
+            Map each requirement to evidence the organisation actually has. For every gap: is it a hard blocker, can adjacent capability cover it, and what is the concrete mitigation?
+          </p>
+          <div className="stack" style={{ gap: 10 }}>
+            {(draft.gaps || []).length === 0 ? <div className="empty" style={{ padding: "16px 10px" }}>No gaps logged. Either this is unusually well-shaped or Block B has not been done yet.</div> : null}
+            {(draft.gaps || []).map((g, i) => (
+              <div className="gap-item" key={i}>
+                <div className="g-top">
+                  <input className="f-input" value={g.req} onChange={e => setGap(i, "req", e.target.value)} placeholder="Requirement or capability needed" />
+                  <button type="button" className={"btn sm " + (g.blocker ? "danger" : "ghost")} onClick={() => setGap(i, "blocker", !g.blocker)}>{g.blocker ? "Hard blocker" : "Mitigable"}</button>
+                  <button type="button" className="btn ghost sm" onClick={() => rmGap(i)} aria-label="Remove gap">✕</button>
+                </div>
+                <input className="f-input" value={g.plan} onChange={e => setGap(i, "plan", e.target.value)} placeholder="Concrete mitigation plan" />
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card tag="BLOCKS C·D" title="Weighted evaluation">
+          {DIMS.map(d => (
+            <div className="dim" key={d.id}>
+              <div className="dim-top">
+                <b>{d.label}<span className="w">w {Math.round(d.w * 100)}%</span></b>
+                <span className="val">{Number(draft.dims[d.id]).toFixed(1)}</span>
+              </div>
+              <p>{d.hint}</p>
+              <input type="range" min="1" max="5" step="0.1" value={draft.dims[d.id]} onChange={e => setDim(d.id, Number(e.target.value))} />
+            </div>
+          ))}
+          <div style={{ marginTop: 14 }}>
+            <label className="f-label">Red flags (each subtracts {FLAG_PENALTY} from the global score)</label>
+            <div className="stack" style={{ gap: 7 }}>
+              {RED_FLAGS.map(f => (
+                <label className={"flag" + ((draft.flags || []).includes(f.id) ? " on" : "")} key={f.id}>
+                  <input type="checkbox" checked={(draft.flags || []).includes(f.id)} onChange={() => toggleFlag(f.id)} />
+                  <span>{f.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </Card>
+
+        <Card tag="BLOCK D·R" title="Readiness and ownership model">
+          <p className="f-hint" style={{ marginTop: 0, marginBottom: 10 }}>
+            Eight statements, 0 (not at all) to 4 (completely). Six place the capability in its right home, two measure raw readiness this cycle. The recommendation updates live in the panel.
+          </p>
+          {READINESS_QS.map(q => (
+            <div className="lik-row" key={q.id}>
+              <p>{q.q}</p>
+              <Likert value={Number(draft.read[q.id]) || 0} onChange={v => setRead(q.id, v)} />
+            </div>
+          ))}
+        </Card>
+
+        <Card tag="BLOCK G" title="Initiative legitimacy">
+          <p className="f-hint" style={{ marginTop: 0, marginBottom: 10 }}>
+            Is this real, sponsored, fundable change or a zombie initiative? This tier never moves the score; it is a separate read. Observations, not accusations: every signal has legitimate explanations and the owner decides.
+          </p>
+          {G_SIGNALS.map(s => (
+            <div className="sig" key={s.id}>
+              <div className="q">{s.q}<small>{s.note}</small></div>
+              <span className="rel">{s.rel}</span>
+              <Tri value={draft.sigs[s.id] === undefined ? null : draft.sigs[s.id]} onChange={v => setSig(s.id, v)} />
+            </div>
+          ))}
+        </Card>
+
+        <Card tag="BLOCK E·F" title="Shaping and engagement notes">
+          <textarea className="f-area" style={{ minHeight: 110 }} value={draft.notes} onChange={e => set("notes", e.target.value)}
+            placeholder="Top changes to the initiative and the case before proposing. Stakeholder objections and the response to each. What would make this a PROCEED?" />
+        </Card>
+
       </div>
-    </div></div>
-    <div className="block"><div className="blockhead"><div className="bn"><I.rank/></div><div><h3>Classify &amp; sequence</h3><p>MoSCoW priority, target wave, and where this lands on Impact vs Effort.</p></div></div>
-    <div className="card cardpad">
-      <div className="two">
-        <Field label="MoSCoW priority"><select className="inp" value={c.moscow||""} onChange={e=>patch({moscow:e.target.value})}><option value="">— not set —</option>{MOSCOW.map(x=><option key={x.id} value={x.id}>{x.label}</option>)}</select></Field>
-        <Field label="Delivery wave"><select className="inp" value={c.wave||"Unassigned"} onChange={e=>patch({wave:e.target.value})}>{WAVES.map(w=><option key={w}>{w}</option>)}</select></Field>
-      </div>
-      <div className="radar-wrap" style={{marginTop:6}}>
-        <Quadrant size={250} xLabel="Effort" yLabel="Impact"
-          corners={{tl:"Quick win",tr:"Major project",bl:"Fill-in",br:"Time sink"}}
-          points={[{x:m.effortIndex,y:m.benefitIndex,color:"var("+VKEY_COLOR[m.vKey]+")",r:9,label:c.name}]}/>
-        <div style={{minWidth:180,flex:1}}>
-          <div className="sec-eyebrow">This change</div>
-          <p className="muted" style={{fontSize:12.5,lineHeight:1.55,marginTop:8}}>Benefit index <b style={{color:"var(--ink)"}}>{m.benefitIndex}%</b>, effort <b style={{color:"var(--ink)"}}>{m.effortKnown?m.effortIndex+"%":"set RICE effort"}</b>. {advice}</p>
+
+      {/* ---------- Verdict panel (signature element) ---------- */}
+      <div>
+        <div className={"verdict v-" + m.verdict.label}>
+          <div className="v-head">
+            <div className="v-gate"><span className="lamp" style={{ background: VCOLOR[m.verdict.cls], color: VCOLOR[m.verdict.cls] }}></span>{m.verdict.label}</div>
+            <p className="v-sub">{m.verdict.sub}</p>
+          </div>
+          <div className="v-body">
+            <div className="v-score">
+              <Dial value={m.global} color={VCOLOR[m.verdict.cls]} />
+              <div className="v-rows">
+                <div className="v-row"><span>Priority index</span><b>{m.priority}</b></div>
+                <div className="v-row"><span>Risk factor</span><b>{Math.round(m.riskFactor * 100)}%</b></div>
+                <div className="v-row"><span>Readiness</span><b>{m.readiness100}%</b></div>
+                <div className="v-row"><span>Red flags</span><b>{m.flags}</b></div>
+                <div className="v-row"><span>Archetype</span><b>{(ARCHETYPES.find(a => a.id === draft.archetype) || {}).label || "Unclassified"}</b></div>
+              </div>
+            </div>
+
+            <div className="model-rec">
+              <div className="mr-top"><span className="mr-chip">model {m.rec.model}</span><b>{m.rec.ownership}</b></div>
+              <p>{m.rec.why} {m.rec.blurb}</p>
+            </div>
+
+            <div className={"tier " + m.tier.cls}>
+              <b>{m.tier.label}</b>
+              {m.tier.sub} {m.tier.answered < G_SIGNALS.length ? "(" + (G_SIGNALS.length - m.tier.answered) + " signal(s) unanswered)" : ""}
+            </div>
+
+            <div className="v-band">
+              <b>Gate bands:</b> 4.5+ proceed · 4.0 to 4.4 caution · 3.5 to 3.9 hold · below 3.5 reject. The legitimacy tier sits outside the score on purpose.
+            </div>
+
+            <div className="row" style={{ gap: 8 }}>
+              <button className="btn primary" type="button" onClick={onSave} style={{ flex: 1, justifyContent: "center" }}>{isNew ? "Save to pipeline" : "Save changes"}</button>
+              {!isNew ? <button className="btn danger sm" type="button" onClick={onDelete}>Delete</button> : null}
+            </div>
+            <div className="v-row"><span>Status</span>
+              <select className="status-sel" value={draft.status} onChange={e => set("status", e.target.value)}>
+                {STATUSES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
+              </select>
+            </div>
+          </div>
         </div>
       </div>
-    </div></div>
-  </div>;
+    </div>
+  );
 }
 
-function Assess({c,patch,m,phase,setPhase}){
-  return <div>
-    <GateCard c={c} m={m}/>
-    <Stepper phase={phase} setPhase={setPhase} done={phaseDone(c)}/>
-    {phase===1&&<P1Intake c={c} patch={patch}/>}
-    {phase===2&&<P2Impact c={c} patch={patch} m={m}/>}
-    {phase===3&&<P3Readiness c={c} patch={patch} m={m}/>}
-    {phase===4&&<P4Prioritise c={c} patch={patch} m={m}/>}
-  </div>;
-}
-
-/* ============ CRITIQUE ============ */
-function triStyle(v,key,col){ const on=v===key; return { background:on?"color-mix(in srgb, var("+col+") 16%, transparent)":"var(--bg)", border:"1px solid "+(on?"var("+col+")":"var(--line)"), color:on?"var("+col+")":"var(--muted)", padding:"5px 10px", borderRadius:7, fontSize:11, fontWeight:600, whiteSpace:"nowrap" }; }
-function Critique({c,patch,m}){
-  const setSig=(id,v)=>patch({signals:Object.assign({},c.signals||{},{[id]:(c.signals&&c.signals[id]===v?undefined:v)})});
-  const tierCol="var("+VKEY_COLOR[m.tierKey]+")"; const sg=c.signals||{}; const risks=[];
-  if(sg.peopleSide==="concerning"||sg.peopleSide==="neutral") risks.push("No solid adoption plan — employee resistance is the biggest cause of change failure. Build engagement before build.");
-  if(sg.sponsor!=="positive") risks.push("Ownership is fuzzy. Name one accountable business owner and a change manager, or this stalls in governance.");
-  if(sg.dependency==="concerning") risks.push("Multi-tribe / BAU coordination needed. Lock cross-tribe PO syncs and a release plan early.");
-  if(sg.partnerRisk==="concerning") risks.push("External-partner/contractual dependency. Surface the contract constraint now; it can gate the timeline.");
-  if(sg.benefit==="concerning") risks.push("Benefit isn't quantified. Without a baseline you can't prove realisation later — set the from-to number.");
-  if(sg.capacity==="concerning") risks.push("Capacity isn't reserved. Get it agreed in QAP; unreserved BAU capacity means it won't happen.");
-  if(m.barrier) risks.push("ADKAR barrier at "+m.barrier+". People-side readiness will throttle delivery until it's addressed.");
-  if((c.readiness&&c.readiness.codeBase!=null?c.readiness.codeBase:2)<=1) risks.push("Shared code base — every change needs heavy alignment. Expect slow, coordinated releases.");
-  return <div>
-    <div className="block"><div className="blockhead"><div className="bn">G</div><div><h3>Red-team the change</h3><p>Observations, not verdicts. Mark each signal honestly; it adjusts the risk score and tier.</p></div></div>
-      <div className="card cardpad" style={{marginBottom:16}}>
-        <div className="callout" style={{borderColor:tierCol,background:"color-mix(in srgb, "+tierCol+" 9%, transparent)",marginBottom:0}}>
-          {m.tierKey==="proceed"?<I.check style={{color:tierCol}}/>:m.tierKey==="reject"?<I.alert style={{color:tierCol}}/>:<I.warn style={{color:tierCol}}/>}
-          <div><b style={{color:tierCol}}>{m.tier}.</b> Risk {Math.round(m.riskFactor*100)}%, blending red-team signals, ADKAR readiness and impact severity. A prompt to act, not a reason to stop.</div>
+/* ============================================================
+   PIPELINE VIEW (tracker with canonical statuses)
+   ============================================================ */
+function PipelineView({ list, onOpen, onNew, onStatus, onExport, onImport }){
+  const rows = useMemo(() => list.map(c => ({ c, m: metrics(c) })).sort((a, b) => b.m.priority - a.m.priority), [list]);
+  const fileRef = useRef(null);
+  const counts = STATUSES.map(s => ({ s, n: list.filter(c => c.status === s.id).length }));
+  return (
+    <div>
+      <div className="funnel">
+        {counts.map(({ s, n }) => (
+          <div className={"fn" + (n > 0 && s.group === "positive" ? " hot" : "")} key={s.id} title={s.desc}>
+            <b>{n}</b><span>{s.label}</span>
+          </div>
+        ))}
+      </div>
+      <div className="card">
+        <div className="card-h">
+          <h3>Tracked initiatives</h3>
+          <div className="row" style={{ gap: 8 }}>
+            <button className="btn ghost sm" type="button" onClick={onExport}>Export JSON</button>
+            <button className="btn ghost sm" type="button" onClick={() => fileRef.current && fileRef.current.click()}>Import</button>
+            <input ref={fileRef} type="file" accept="application/json" style={{ display: "none" }}
+              onChange={e => { const f = e.target.files[0]; if (f) onImport(f); e.target.value = ""; }} />
+            <button className="btn primary sm" type="button" onClick={onNew}>+ New assessment</button>
+          </div>
+        </div>
+        <div className="card-b" style={{ padding: 0, overflowX: "auto" }}>
+          {rows.length === 0 ? (
+            <div className="empty"><b>Nothing tracked yet.</b><br />Every assessed initiative gets registered here, no exceptions. Start with a new assessment.</div>
+          ) : (
+            <table className="tbl">
+              <thead><tr>
+                <th>#</th><th>Initiative</th><th>Score</th><th>Verdict</th><th>Model</th><th>Legitimacy</th><th>Status</th><th>Updated</th>
+              </tr></thead>
+              <tbody>
+                {rows.map(({ c, m }) => (
+                  <tr key={c.id} className="click" onClick={e => { if (e.target.tagName !== "SELECT" && e.target.tagName !== "OPTION") onOpen(c.id); }}>
+                    <td className="t-num">{String(c.num).padStart(3, "0")}</td>
+                    <td className="t-name">{c.name || "Untitled"}<small>{c.sponsor || "No sponsor"} · {(ARCHETYPES.find(a => a.id === c.archetype) || {}).label || "Unclassified"}</small></td>
+                    <td><span className="t-score" style={{ color: VCOLOR[m.verdict.cls] }}>{m.global.toFixed(1)}</span></td>
+                    <td><StatusChip m={m} /></td>
+                    <td className="t-num">{m.rec.ownership} · {m.rec.model}</td>
+                    <td><span className={"chip " + (m.tier.cls === "high" ? "proceed" : m.tier.cls === "susp" ? "reject" : "caution")}>{m.tier.label}</span></td>
+                    <td>
+                      <select className="status-sel" value={c.status} onClick={e => e.stopPropagation()} onChange={e => onStatus(c.id, e.target.value)}>
+                        {STATUSES.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
+                      </select>
+                    </td>
+                    <td className="t-num">{c.updated}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
-      <div className="card cardpad">{SIGNALS.map(g=>{ const v=c.signals&&c.signals[g.id];
-        return <div key={g.id} style={{display:"grid",gridTemplateColumns:"1fr auto",gap:12,alignItems:"center",padding:"12px 14px",border:"1px solid var(--line)",borderRadius:10,background:"var(--surface-2)",marginBottom:9}}>
-          <div><div style={{fontWeight:500,fontSize:13}}>{g.q}</div><div style={{fontSize:11,color:"var(--faint)",marginTop:3}}><span style={{fontFamily:"var(--mono)"}}>reliability: {g.rel}</span> · {g.src}</div></div>
-          <div style={{display:"flex",gap:5}}>
-            <button onClick={()=>setSig(g.id,"positive")} style={triStyle(v,"positive","--proceed")}>Healthy</button>
-            <button onClick={()=>setSig(g.id,"neutral")} style={triStyle(v,"neutral","--info")}>Unclear</button>
-            <button onClick={()=>setSig(g.id,"concerning")} style={triStyle(v,"concerning","--reject")}>Concern</button>
-          </div></div>; })}</div>
     </div>
-    {risks.length>0&&<div className="block"><div className="blockhead"><div className="bn" style={{background:"var(--reject)"}}>!</div><div><h3>Surfaced risks &amp; mitigations</h3><p>Auto-generated from your answers — the things most likely to sink this.</p></div></div>
-      <div className="card cardpad"><ul style={{listStyle:"none",margin:0,padding:0,display:"flex",flexDirection:"column",gap:8}}>{risks.map((r,i)=><li key={i} style={{display:"flex",gap:10,fontSize:12.5,lineHeight:1.5,padding:"10px 12px",background:"var(--surface-2)",border:"1px solid var(--line)",borderRadius:9}}><span style={{color:"var(--caution)",flex:"none"}}><I.warn style={{width:15,height:15}}/></span><span>{r}</span></li>)}</ul></div></div>}
-    <div className="block"><div className="blockhead"><div className="bn" style={{background:"var(--info)"}}>P</div><div><h3>Pre-mortem</h3><p>Assume it's 12 months on and this change failed. Write the post-mortem now, then go prevent it.</p></div></div>
-      <div className="card cardpad"><textarea className="inp" style={{minHeight:120}} placeholder="It failed because..." value={c.preMortem||""} onChange={e=>patch({preMortem:e.target.value})}/></div></div>
-  </div>;
+  );
 }
 
-/* ============ PRIORITISE (portfolio) ============ */
-function Prioritise({changes,weights,setWeights,select}){
-  const [lens,setLens]=useState("priority");
-  const rows=changes.map(c=>({c,m:metrics(c,weights)})).sort((a,b)=> lens==="rice"? b.m.rice-a.m.rice : b.m.priority-a.m.priority);
-  const total=Object.values(weights).reduce((a,b)=>a+b,0);
-  const wkeys=[["alignment","Strategic alignment"],["value","Business value"],["reach","Reach"],["feasibility","Feasibility"],["readiness","Readiness"]];
-  const pts=changes.map(c=>{const m=metrics(c,weights);const lab=m.benefitIndex>=50&&m.effortIndex<50?"quick win":m.benefitIndex>=50?"major":m.effortIndex<50?"fill-in":"time sink";return {x:m.effortIndex,y:m.benefitIndex,color:"var("+VKEY_COLOR[m.vKey]+")",label:c.name+" — "+lab};});
-  return <div>
-    <div className="block"><div className="blockhead"><div className="bn"><I.rank/></div><div><h3>Scoring weights</h3><p>Tune what the portfolio rewards. Normalised, so they needn't sum to 100. Risk is a penalty on top.</p></div></div>
-    <div className="card cardpad"><div className="weights">{wkeys.map(kv=><div className="wt" key={kv[0]}><label>{kv[1]}</label><input type="range" min="0" max="40" value={weights[kv[0]]} onChange={e=>setWeights(Object.assign({},weights,{[kv[0]]:+e.target.value}))}/><span className="pct">{Math.round(weights[kv[0]]/total*100)}%</span></div>)}</div>
-      <div className="row" style={{marginTop:12}}><button className="btn subtle" onClick={()=>setWeights(Object.assign({},DEFAULT_WEIGHTS))}>Reset to default</button></div></div></div>
-    <div className="two" style={{alignItems:"start"}}>
-      <div className="block"><div className="blockhead"><div className="bn"><I.target/></div><div><h3>Impact vs effort</h3><p>Quick wins top-left; deprioritise bottom-right.</p></div></div>
-        <div className="card cardpad" style={{display:"grid",placeItems:"center"}}><Quadrant size={300} xLabel="Effort" yLabel="Impact" corners={{tl:"Quick win",tr:"Major project",bl:"Fill-in",br:"Time sink"}} points={pts}/></div></div>
-      <div className="block"><div className="blockhead"><div className="bn"><I.flag/></div><div><h3>MoSCoW</h3><p>Requirement priority across the portfolio.</p></div></div>
-        <div className="card cardpad"><div className="mcols">{MOSCOW.map(col=>{ const items=changes.filter(c=>c.moscow===col.id);
-          return <div className="mcol" key={col.id}><h4><i style={{background:col.color}}/>{col.label}</h4>{items.length? items.map(c=>{const m=metrics(c,weights);return <div className="mcard" key={c.id} onClick={()=>select(c.id)}>{c.name}<div className="s">{m.priority.toFixed(1)} · {c.wave||"Unassigned"}</div></div>}):<div className="faint" style={{fontSize:11.5}}>—</div>}</div>; })}</div>
-          {changes.some(c=>!c.moscow)&&<div className="faint" style={{fontSize:11,marginTop:8}}>{changes.filter(c=>!c.moscow).length} change(s) not yet classified.</div>}</div></div>
-    </div>
-    <div className="block"><div className="blockhead"><div className="bn"><I.grid/></div><div style={{flex:1}}><h3>Ranked portfolio</h3><p>The few worth your time, top of the list. A filter, not a to-do list.</p></div>
-      <div className="seg" style={{width:200}}><button className={lens==="priority"?"on":""} onClick={()=>setLens("priority")}>Weighted</button><button className={lens==="rice"?"on":""} onClick={()=>setLens("rice")}>RICE</button></div></div>
-      <div className="card scrollx" style={{padding:"16px 12px"}}><table className="ptable"><thead><tr><th>#</th><th>Change</th><th>Tech</th><th>People</th><th>Risk</th><th>{lens==="rice"?"RICE":"Priority"}</th><th>Gate</th></tr></thead>
-      <tbody>{rows.map((rw,i)=>{const c=rw.c,m=rw.m;return <tr key={c.id} onClick={()=>select(c.id)}>
-        <td className="rf">{String(i+1).padStart(2,"0")}</td>
-        <td><div className="nm">{c.name}</div><div className="rf">{c.ref} · {c.wave||"Unassigned"}</div></td>
-        <td><div className="track" style={{width:64}}><div className="fill" style={{width:m.readiness100+"%"}}/></div></td>
-        <td><div className="track" style={{width:64}}><div className="fill violet" style={{width:(m.peopleAssessed?m.people100:0)+"%"}}/></div></td>
-        <td><div className="track" style={{width:54}}><div className="fill risk" style={{width:Math.round(m.riskFactor*100)+"%"}}/></div></td>
-        <td>{lens==="rice"? <span className="rf" style={{fontSize:14,color:"var(--ink)",fontWeight:700}}>{m.rice}</span> : <ScorePill v={m.priority}/>}</td>
-        <td><span className="statusdot" style={{color:"var("+VKEY_COLOR[m.vKey]+")",fontSize:11.5}}><i style={{background:"var("+VKEY_COLOR[m.vKey]+")"}}/>{m.verdict}</span></td>
-      </tr>;})}</tbody></table></div></div>
-  </div>;
-}
-
-/* ============ WAVE PLAN ============ */
-function WavePlan({changes,weights,patchAny,select}){
-  const groupSet={};
-  changes.forEach(c=> (c.impactGroups||[]).forEach(g=>{ const key=(g.name||"").trim().toLowerCase(); if(!key)return; groupSet[key]=g.name.trim(); }));
-  const groups=Object.keys(groupSet).map(k=>({k,name:groupSet[k]}));
-  const realWaves=WAVES.filter(w=>w!=="Unassigned");
-  const cell=(gk,wave)=>{ let load=0,count=0; changes.forEach(c=>{ if((c.wave||"Unassigned")!==wave)return; (c.impactGroups||[]).forEach(g=>{ if((g.name||"").trim().toLowerCase()===gk){ const sev=Math.max.apply(null,IMPACT_DIMS.map(d=>SEV[g[d.id]||""])); load+=sev; count++; } }); }); return {load,count}; };
-  let maxLoad=1; groups.forEach(g=>realWaves.forEach(w=>{maxLoad=Math.max(maxLoad,cell(g.k,w).load);}));
-  const sevColor=(load)=>{ if(load<=0)return {background:"var(--bg)",color:"var(--faint)"}; const t=Math.min(1,load/Math.max(3,maxLoad)); return {background:"rgba(248,113,113,"+(0.12+t*0.5)+")",color: t>0.5?"#fff":"var(--ink-2)"}; };
-  return <div>
-    <div className="block"><div className="blockhead"><div className="bn"><I.waves/></div><div><h3>Wave board</h3><p>Sequence changes into delivery waves. Reassign with the dropdown on each card.</p></div></div>
-      <div className="card cardpad scrollx"><div className="wboard">{WAVES.map(w=>{ const items=changes.filter(c=>(c.wave||"Unassigned")===w);
-        return <div className="wcol" key={w}><h4><span>{w}</span><span>{items.length}</span></h4>{items.map(c=>{const m=metrics(c,weights);
-          return <div className="wcard" key={c.id}><div className="nm" onClick={()=>select(c.id)} style={{cursor:"pointer"}}>{c.name}</div>
-            <div className="meta"><span>{m.priority.toFixed(1)}</span><span>{(c.impactGroups||[]).length} grp</span><span style={{color:TIME_Q[m.time.quadrant].color}}>{m.time.quadrant}</span></div>
-            <select value={c.wave||"Unassigned"} onChange={e=>patchAny(c.id,{wave:e.target.value})}>{WAVES.map(x=><option key={x}>{x}</option>)}</select></div>; })}
-          {items.length===0&&<div className="faint" style={{fontSize:11.5}}>—</div>}</div>; })}</div></div></div>
-    <div className="block"><div className="blockhead"><div className="bn" style={{background:"var(--caution)",color:"#3A2E0B"}}><I.alert/></div><div><h3>Change saturation</h3><p>How much change each group absorbs per wave. Hot cells mean a group facing too much at once — rebalance.</p></div></div>
-      <div className="card cardpad scrollx">
-        {groups.length===0? <p className="muted" style={{margin:0,fontSize:13}}>Add stakeholder groups in the impact matrix (Phase 2) to see saturation.</p> :
-        <table className="satmatrix"><thead><tr><th className="grp">Group</th>{realWaves.map(w=><th key={w}>{w.replace("Wave ","W")}</th>)}<th>Total</th></tr></thead>
-        <tbody>{groups.map(g=>{ const cells=realWaves.map(w=>cell(g.k,w)); const tot=cells.reduce((a,c)=>a+c.load,0);
-          return <tr key={g.k}><td className="grp">{g.name}</td>{cells.map((cl,i)=><td key={i}><div className="satcell" style={sevColor(cl.load)} title={cl.count+" change(s), load "+cl.load}>{cl.load||""}</div></td>)}<td><div className="satcell" style={{background:"var(--surface-2)",color:"var(--ink)"}}>{tot}</div></td></tr>; })}</tbody></table>}
-        <p className="faint" style={{fontSize:11.5,marginTop:12,marginBottom:0}}>Load = sum of each group's peak severity across changes in that wave. Heat rises with concurrent, high-severity change.</p>
+/* ============================================================
+   PATTERNS VIEW (portfolio pattern detector)
+   ============================================================ */
+function PatternsView({ list }){
+  const P = useMemo(() => analysePatterns(list), [list]);
+  if (P.short !== undefined){
+    return (
+      <div className="card"><div className="card-b">
+        <div className="empty">
+          <b>Not enough data yet: {P.short}/{P.need} initiatives have progressed beyond assessment.</b><br />
+          Keep assessing and deciding; come back when more outcomes exist to analyse. Patterns from fewer than five decided cases are noise wearing a suit.
+        </div>
       </div></div>
-  </div>;
-}
-
-/* ============ PATTERNS ============ */
-function Patterns({changes,weights}){
-  const ms=changes.map(c=>({c,m:metrics(c,weights)})); const n=ms.length||1; const avg=(f)=>ms.reduce((a,x)=>a+f(x),0)/n;
-  const proceed=ms.filter(x=>x.m.vKey==="proceed").length; const fragile=ms.filter(x=>x.m.tierKey==="reject").length;
-  const avgReady=Math.round(avg(x=>x.m.readiness100));
-  const counts={}; STATUSES.forEach(s=>counts[s.id]=0); changes.forEach(c=>{if(counts[c.status]!==undefined)counts[c.status]++;});
-  const maxCount=Math.max.apply(null,[1].concat(Object.keys(counts).map(k=>counts[k])));
-  const axisAvg=READINESS.map(a=>({a,v:avg(x=>(x.c.readiness&&typeof x.c.readiness[a.id]==="number"?x.c.readiness[a.id]:2))})).sort((p,q)=>p.v-q.v);
-  const sigCount=SIGNALS.map(g=>({g,c:changes.filter(c=>c.signals&&c.signals[g.id]==="concerning").length})).filter(x=>x.c>0).sort((p,q)=>q.c-p.c);
-  const stuck=changes.filter(c=>["Proposed","Assessed"].includes(c.status));
-  const adk=ADKAR.map(x=>{ const vals=changes.map(c=>(c.adkar&&c.adkar[x.id])||0).filter(v=>v>0); return {x, v: vals.length? vals.reduce((a,b)=>a+b,0)/vals.length:0, count:vals.length}; });
-  const adkSorted=adk.slice().sort((p,q)=>p.v-q.v);
-  const timeDist=Object.keys(TIME_Q).map(q=>({q,c:ms.filter(x=>x.m.time.quadrant===q).length}));
-  return <div>
-    <div className="grid" style={{gridTemplateColumns:"repeat(4,1fr)",marginBottom:18}}>
-      <div className="card stat"><div className="n">{changes.length}</div><div className="l">In portfolio</div></div>
-      <div className="card stat"><div className="n" style={{color:"var(--proceed)"}}>{proceed}</div><div className="l">Clearing the gate</div></div>
-      <div className="card stat"><div className="n" style={{color:"var(--teal)"}}>{avgReady}%</div><div className="l">Avg readiness</div></div>
-      <div className="card stat"><div className="n" style={{color:fragile?"var(--reject)":"var(--ink)"}}>{fragile}</div><div className="l">Flagged fragile</div></div>
-    </div>
-    <div className="block"><div className="blockhead"><div className="bn"><I.pulse/></div><div><h3>Delivery funnel</h3><p>Where the portfolio sits across the change lifecycle.</p></div></div>
-      <div className="card cardpad"><div className="funnel">{STATUSES.filter(s=>counts[s.id]>0||["Proposed","Assessed","Prioritised","Approved","In delivery","Released"].includes(s.id)).map(s=>
-        <div className="f" key={s.id}><span className="muted">{s.id}</span><div className="ft" style={{width:Math.max(24,counts[s.id]/maxCount*100)+"%",background:s.color}}>{counts[s.id]||""}</div><span className="rf" style={{textAlign:"right"}}>{counts[s.id]}</span></div>)}</div></div></div>
-    <div className="two">
-      <div className="block"><div className="blockhead"><div className="bn"><I.heart/></div><div><h3>ADKAR across the portfolio</h3><p>Systemic readiness. The lowest bar is your organisation-wide barrier.</p></div></div>
-        <div className="card cardpad"><div className="bars">{adkSorted.map(d=>
-          <div className="bar-row" key={d.x.id}><span className="lab">{d.x.label}</span><div className="track"><div className="fill violet" style={{width:(d.v/5*100)+"%"}}/></div><span className="n">{d.count?d.v.toFixed(1):"—"}</span></div>)}</div>
-          <p className="faint" style={{fontSize:11.5,marginTop:10,marginBottom:0}}>Averaged over changes where ADKAR has been scored.</p></div></div>
-      <div className="block"><div className="blockhead"><div className="bn"><I.layers/></div><div><h3>TIME disposition</h3><p>Where the application estate sits.</p></div></div>
-        <div className="card cardpad"><div className="bars">{timeDist.map(d=>
-          <div className="bar-row" key={d.q}><span className="lab" style={{color:TIME_Q[d.q].color}}>{d.q}</span><div className="track"><div className="fill" style={{width:(d.c/n*100)+"%",background:TIME_Q[d.q].color}}/></div><span className="n">{d.c}</span></div>)}</div></div></div>
-    </div>
-    <div className="two">
-      <div className="block"><div className="blockhead"><div className="bn"><I.shield/></div><div><h3>Weakest readiness</h3><p>Portfolio-wide gaps — where to invest in decoupling.</p></div></div>
-        <div className="card cardpad"><div className="bars">{axisAvg.map(d=><div className="bar-row" key={d.a.id}><span className="lab">{d.a.label}</span><div className="track"><div className="fill" style={{width:(d.v/4*100)+"%"}}/></div><span className="n">{d.v.toFixed(1)}</span></div>)}</div></div></div>
-      <div className="block"><div className="blockhead"><div className="bn" style={{background:"var(--reject)"}}>!</div><div><h3>Recurring concerns</h3><p>The same risks showing up across changes.</p></div></div>
-        <div className="card cardpad">{sigCount.length? <div className="bars">{sigCount.map(x=><div className="bar-row" key={x.g.id}><span className="lab" style={{whiteSpace:"normal"}}>{x.g.q.replace(/\?$/,"")}</span><div className="track"><div className="fill risk" style={{width:(x.c/n*100)+"%"}}/></div><span className="n">{x.c}</span></div>)}</div> : <p className="muted" style={{fontSize:13,margin:0}}>No concerns flagged yet. Run the Critique on each change.</p>}</div></div>
-    </div>
-    {stuck.length>0&&<div className="block"><div className="blockhead"><div className="bn" style={{background:"var(--caution)",color:"#3A2E0B"}}>?</div><div><h3>Not yet through the gate</h3><p>Proposed or assessed but not prioritised — chase these.</p></div></div>
-      <div className="card cardpad"><div className="row">{stuck.map(c=><span key={c.id} className="tag" style={{color:"var(--ink-2)"}}>{c.name} · {c.status}</span>)}</div></div></div>}
-  </div>;
-}
-
-/* ============ PORTFOLIO ============ */
-function Portfolio({changes,weights,select,onNew,onDelete}){
-  const [filter,setFilter]=useState("All");
-  const groups=["All"].concat(STATUSES.map(s=>s.id));
-  const rows=changes.map(c=>({c,m:metrics(c,weights)})).filter(x=> filter==="All"||x.c.status===filter).sort((a,b)=> b.m.priority-a.m.priority);
-  if(changes.length===0) return <div className="empty card"><I.grid/><h3>No change initiatives yet</h3><p>Add the first one to run it through intake, impact, readiness and prioritisation.</p><button className="btn primary" style={{marginTop:14}} onClick={onNew}><I.plus/> New change</button></div>;
-  return <div>
-    <div className="row" style={{marginBottom:16,gap:7}}>{groups.map(g=>{ const nn= g==="All"? changes.length : changes.filter(c=>c.status===g).length; if(g!=="All"&&nn===0) return null;
-      return <button key={g} className={"btn subtle"+(filter===g?" primary":"")} style={{padding:"6px 12px",fontSize:12.5}} onClick={()=>setFilter(g)}>{g} <span style={{opacity:.7,fontFamily:"var(--mono)",marginLeft:4}}>{nn}</span></button>; })}</div>
-    <div className="card scrollx" style={{padding:"16px 12px"}}><table className="ptable"><thead><tr><th>Change</th><th>Type</th><th>Status</th><th>Phases</th><th>Priority</th><th>Gate</th><th></th></tr></thead>
-      <tbody>{rows.map(rw=>{const c=rw.c,m=rw.m,done=phaseDone(c);return <tr key={c.id} onClick={()=>select(c.id)}>
-        <td><div className="nm">{c.name}</div><div className="rf">{c.ref} · {c.owner||"—"}</div></td>
-        <td><span className="typetag" style={{color:typeColor(c.type),background:"color-mix(in srgb, "+typeColor(c.type)+" 14%, transparent)"}}>{c.type}</span></td>
-        <td><span className="statusdot"><i style={{background:statusColor(c.status)}}/>{c.status}</span></td>
-        <td><span className="pdots">{done.map((d,i)=><i key={i} className={d?"on":""}/>)}</span></td>
-        <td><ScorePill v={m.priority}/></td>
-        <td><span className="statusdot" style={{color:"var("+VKEY_COLOR[m.vKey]+")",fontSize:11.5}}><i style={{background:"var("+VKEY_COLOR[m.vKey]+")"}}/>{m.verdict}</span></td>
-        <td onClick={e=>{e.stopPropagation(); onDelete(c.id);}}><button className="iconbtn"><I.trash/></button></td>
-      </tr>;})}</tbody></table></div>
-  </div>;
-}
-
-/* ============ APP ============ */
-function App(){
-  const init=useMemo(loadState,[]);
-  const [changes,setChanges]=useState(init.changes);
-  const [weights,setWeights]=useState(init.weights);
-  const [storeOk]=useState(init.ok);
-  const [tab,setTab]=useState("portfolio");
-  const [sel,setSel]=useState(init.changes[0]?init.changes[0].id:null);
-  const [phase,setPhase]=useState(1);
-  const [toast,setToast]=useState(null);
-  const [confirm,setConfirm]=useState(null);
-  const fileRef=useRef();
-  const [canInstall,setCanInstall]=useState(typeof window!=="undefined"&&!!window.__deferredPrompt);
-  const [swReady,setSwReady]=useState(typeof navigator!=="undefined"&&!!(navigator.serviceWorker&&navigator.serviceWorker.controller));
-
-  useEffect(()=>{ saveState(changes,weights,storeOk); },[changes,weights,storeOk]);
-  useEffect(()=>{
-    const onI=()=>setCanInstall(true), onInst=()=>setCanInstall(false), onSW=()=>setSwReady(true);
-    window.addEventListener("pwa-installable",onI); window.addEventListener("pwa-installed",onInst); window.addEventListener("pwa-sw-ready",onSW);
-    if(typeof navigator!=="undefined"&&navigator.serviceWorker){ navigator.serviceWorker.ready.then(()=>setSwReady(true)).catch(()=>{}); }
-    return ()=>{ window.removeEventListener("pwa-installable",onI); window.removeEventListener("pwa-installed",onInst); window.removeEventListener("pwa-sw-ready",onSW); };
-  },[]);
-  const flash=(msg)=>{ setToast(msg); setTimeout(()=>setToast(null),2400); };
-  const installApp=async()=>{ const p=window.__deferredPrompt; if(!p){ flash("Install isn't offered here. On the deployed site use Chrome's install icon, or Add to Home Screen."); return; } p.prompt(); try{ await p.userChoice; }catch(e){} window.__deferredPrompt=null; setCanInstall(false); };
-
-  const active=changes.find(c=>c.id===sel)||null;
-  const m=active? metrics(active,weights):null;
-  const patch=(upd)=> setChanges(cs=>cs.map(c=> c.id===sel? Object.assign({},c,upd,{updatedAt:Date.now()}):c));
-  const patchAny=(id,upd)=> setChanges(cs=>cs.map(c=> c.id===id? Object.assign({},c,upd,{updatedAt:Date.now()}):c));
-
-  const newChange=()=>{
-    const id="chg-"+Math.random().toString(36).slice(2,8);
-    const c={ id, createdAt:Date.now(), updatedAt:Date.now(), name:"Untitled change", ref:"CHG-"+String(changes.length+1).padStart(3,"0"),
-      type:"Process", status:"Proposed", owner:"", changeManager:"", sponsor:"", timeline:"",
-      fourPs:{project:"",purpose:"",particulars:"",people:""}, currentState:"", futureState:"", rationale:"", stakeholders:"", outcomes:"", nextSteps:"",
-      newCommonComponent:false, legacyDependency:false, technicalHealth:2,
-      readiness:{codeBase:2,functional:2,release:2,capabilities:2,partners:2,operational:2},
-      scores:{alignment:3,value:3,reach:3,feasibility:3}, rice:{reach:0,impact:1,confidence:50,effort:1},
-      adkar:{}, impactGroups:[], overallRisk:"", timeOverride:"", sixR:"", moscow:"", wave:"Unassigned",
-      signals:{}, preMortem:"", notes:"" };
-    setChanges(cs=>[c].concat(cs)); setSel(id); setPhase(1); setTab("assess");
-  };
-  const doDelete=(id)=> setConfirm({id, name:(changes.find(c=>c.id===id)||{}).name});
-  const confirmDelete=()=>{ setChanges(cs=>cs.filter(c=>c.id!==confirm.id)); if(sel===confirm.id) setSel(null); setConfirm(null); flash("Change deleted"); };
-
-  const exportJSON=()=>{ const blob=new Blob([JSON.stringify({changes,weights,exported:new Date().toISOString()},null,2)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="change-ops-"+new Date().toISOString().slice(0,10)+".json"; a.click(); flash("Portfolio exported"); };
-  const importJSON=(e)=>{ const f=e.target.files[0]; if(!f)return; const rd=new FileReader(); rd.onload=()=>{ try{ const p=JSON.parse(rd.result); if(Array.isArray(p.changes)){ setChanges(p.changes); if(p.weights) setWeights(p.weights); setSel(p.changes[0]?p.changes[0].id:null); flash("Portfolio imported"); } else flash("That file has no changes array"); }catch(err){ flash("Could not read that file"); } }; rd.readAsText(f); e.target.value=""; };
-  const copyBrief=()=>{ if(!active)return; const c=active, mm=metrics(c,weights); const fp=c.fourPs||{}; const mits=mitigations(c);
-    const md="# Change assessment — "+c.name+" ("+c.ref+")\n"+
-      "Type: "+c.type+" · Status: "+c.status+" · Owner: "+(c.owner||"—")+" · Sponsor: "+(c.sponsor||"—")+"\n\n"+
-      "## Gate verdict\n**"+mm.verdict+"** — priority "+mm.priority.toFixed(1)+"/5 · risk "+Math.round(mm.riskFactor*100)+"% · robustness "+mm.tier+"\n"+
-      "Recommended model: "+mm.rec.ownership+" (model "+mm.rec.model.toUpperCase()+", "+mm.rec.modelName+"). "+mm.rec.why+"\n"+
-      "Tech readiness "+mm.readiness100+"% · People (ADKAR) "+(mm.peopleAssessed?mm.people100+"%":"not assessed")+" · Impact "+(mm.impactAssessed?mm.impact100+"%":"not assessed")+" · Disposition "+mm.time.quadrant+" ("+mm.time.sixR+") · MoSCoW "+(c.moscow||"—")+" · "+(c.wave||"Unassigned")+"\n\n"+
-      "## Intake (4 Ps)\n- Project: "+(fp.project||"—")+"\n- Purpose: "+(fp.purpose||"—")+"\n- Particulars: "+(fp.particulars||"—")+"\n- People: "+(fp.people||"—")+"\n- Current state: "+(c.currentState||"—")+"\n- Future state: "+(c.futureState||"—")+"\n\n"+
-      "## Impact\n"+((c.impactGroups||[]).length? (c.impactGroups||[]).map(g=>"- "+g.name+": "+IMPACT_DIMS.map(d=>d.label+" "+(g[d.id]||"-")).join(", ")).join("\n") : "- Not assessed")+"\nOverall risk: "+(mm.impactOverall||"—")+"\n\n"+
-      "## ADKAR readiness\n"+(adkarProfile(c).assessed? ADKAR.map(x=>"- "+x.label+": "+(c.adkar[x.id]||"—")+"/5").join("\n")+(mm.barrier?"\nBarrier point: "+mm.barrier:"") : "- Not assessed")+"\n\n"+
-      "## Mitigation\n"+(mits.length? mits.map(mt=>"- ["+mt.kind+"] "+mt.label+": "+mt.actions.join("; ")).join("\n") : "- None required")+"\n\n"+
-      "## Scores\n"+DIMS.map(d=>"- "+d.label+": "+(c.scores&&c.scores[d.id]!=null?c.scores[d.id]:"—")+"/5").join("\n")+"\n- RICE: "+mm.rice+"\n\n"+
-      "## Pre-mortem\n"+(c.preMortem||"—")+"\n";
-    if(navigator.clipboard) navigator.clipboard.writeText(md).then(()=>flash("Assessment brief copied as Markdown"),()=>flash("Clipboard blocked — copy manually")); else flash("Clipboard not available");
-  };
-
-  const NAV=[ {id:"portfolio",label:"Portfolio",icon:I.grid,count:changes.length}, {id:"assess",label:"Assess",icon:I.scan}, {id:"prioritise",label:"Prioritise",icon:I.rank}, {id:"wave",label:"Wave plan",icon:I.waves}, {id:"critique",label:"Critique",icon:I.shield}, {id:"patterns",label:"Patterns",icon:I.pulse} ];
-  const TITLES={ portfolio:["Portfolio","Every change, scored and tracked in one place"], assess:["Assess","Four phases: intake, impact, readiness, prioritise"], prioritise:["Prioritise","Rank the portfolio — a filter, not a backlog"], wave:["Wave plan","Sequence delivery and catch change saturation"], critique:["Critique","Red-team the change before it red-teams you"], patterns:["Patterns","What the whole portfolio is telling you"] };
-  const needsActive=(tab==="assess"||tab==="critique");
-
-  return <div className="app">
-    <aside className="rail">
-      <div className="brand"><div className="mark"><I.gate style={{color:"#04231f"}}/></div><div><b>Change-Ops</b><small>Decision engine</small></div></div>
-      {NAV.map(nv=><button key={nv.id} className={"navbtn"+(tab===nv.id?" active":"")} onClick={()=>setTab(nv.id)}><nv.icon/>{nv.label}{nv.count!==undefined&&<span className="pill">{nv.count}</span>}</button>)}
-      <div className="spacer"></div>
-      <div className="railfoot">
-        {canInstall&&<button className="ghostbtn install" onClick={installApp}><I.download/> Install app</button>}
-        <div className={"swstat"+(swReady?" on":"")}><span className="dot"></span>{swReady?"Offline ready":"Online only"}</div>
-        {!storeOk&&<div className="storewarn">Saving to this browser is blocked here. Your work stays for this session — use Export to keep it.</div>}
-        <button className="ghostbtn" onClick={exportJSON}><I.download/> Export portfolio</button>
-        <button className="ghostbtn" onClick={()=>fileRef.current.click()}><I.upload/> Import portfolio</button>
-        <input ref={fileRef} type="file" accept="application/json" onChange={importJSON} style={{display:"none"}}/>
-      </div>
-    </aside>
-    <main className="main">
-      <header className="topbar">
-        <div><h1>{TITLES[tab][0]}</h1><div className="sub">{TITLES[tab][1]}</div></div>
-        <div className="right">{active&&(tab==="assess"||tab==="critique")&&<button className="btn subtle" onClick={copyBrief}><I.copy/> Copy brief</button>}<button className="btn primary" onClick={newChange}><I.plus/> New change</button></div>
-      </header>
-      <div className="wrap">
-        {needsActive&&changes.length>0&&<div className="activebar"><div><div className="lab">Active change</div><div className="nm">{active? active.name : "— none selected —"}</div></div>
-          <select className="inp" value={sel||""} onChange={e=>setSel(e.target.value)}><option value="" disabled>Select a change…</option>{changes.map(c=><option key={c.id} value={c.id}>{c.ref} · {c.name}</option>)}</select></div>}
-        {tab==="portfolio"&&<Portfolio changes={changes} weights={weights} select={(id)=>{setSel(id);setPhase(1);setTab("assess");}} onNew={newChange} onDelete={doDelete}/>}
-        {tab==="prioritise"&&<Prioritise changes={changes} weights={weights} setWeights={setWeights} select={(id)=>{setSel(id);setPhase(4);setTab("assess");}}/>}
-        {tab==="wave"&&<WavePlan changes={changes} weights={weights} patchAny={patchAny} select={(id)=>{setSel(id);setPhase(4);setTab("assess");}}/>}
-        {tab==="patterns"&&<Patterns changes={changes} weights={weights}/>}
-        {tab==="assess"&&(active? <Assess c={active} patch={patch} m={m} phase={phase} setPhase={setPhase}/> : <div className="empty card"><I.scan/><h3>No change selected</h3><p>Pick one above or add a new change to start assessing.</p></div>)}
-        {tab==="critique"&&(active? <Critique c={active} patch={patch} m={m}/> : <div className="empty card"><I.shield/><h3>No change selected</h3><p>Pick one above to red-team it.</p></div>)}
-      </div>
-    </main>
-    {confirm&&<div className="scrim" onClick={()=>setConfirm(null)}><div className="modal" onClick={e=>e.stopPropagation()}><div className="mh"><div className="ic"><I.trash/></div><h3>Delete change?</h3></div><div className="mb"><p className="muted" style={{margin:0,fontSize:13.5}}>Delete <b style={{color:"var(--ink)"}}>{confirm.name}</b>? This can't be undone.</p></div><div className="mf"><button className="btn subtle" onClick={()=>setConfirm(null)}>Cancel</button><button className="btn" style={{borderColor:"var(--reject)",color:"var(--reject)"}} onClick={confirmDelete}>Delete</button></div></div></div>}
-    {toast&&<div className="toast"><I.check/>{toast}</div>}
-  </div>;
-}
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
-</script>
-<script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function(){
-      navigator.serviceWorker.register("sw.js").then(function(){ window.dispatchEvent(new Event("pwa-sw-ready")); }).catch(function(){});
-    });
+    );
   }
+  const grLabel = { positive: "Positive", negative: "Negative", self: "Self-filtered", pending: "Pending" };
+  const maxFn = Math.max(1, ...P.funnel.map(f => f.n));
+  const maxFlag = Math.max(1, ...(P.flagRows.map(r => r.n)));
+  return (
+    <div className="stack">
+      <div className="stat-strip">
+        <div className="stat"><b>{P.total}</b><span>Tracked</span></div>
+        <div className="stat"><b>{P.progressed}</b><span>Progressed</span></div>
+        <div className="stat"><b style={{ color: "var(--proceed)" }}>{(P.scoreComparison.find(x => x.gr === "positive") || {}).n || 0}</b><span>Positive outcomes</span></div>
+        <div className="stat"><b style={{ color: "var(--teal)" }}>{P.floor !== null ? P.floor.toFixed(1) : "n/a"}</b><span>Evidence score floor</span></div>
+      </div>
+
+      <Card title="Conversion funnel">
+        {P.funnel.map(({ s, n }) => (
+          <div className="bar-row" key={s.id}>
+            <div className="lab">{s.label}</div>
+            <div className="bar"><i style={{ width: (100 * n / maxFn) + "%" }}></i></div>
+            <div className="n">{n} · {P.total ? Math.round(100 * n / P.total) : 0}%</div>
+          </div>
+        ))}
+      </Card>
+
+      <Card title="Score against outcome">
+        <table className="tbl">
+          <thead><tr><th>Outcome</th><th>Avg</th><th>Min</th><th>Max</th><th>N</th></tr></thead>
+          <tbody>
+            {P.scoreComparison.map(x => (
+              <tr key={x.gr}>
+                <td>{grLabel[x.gr]}</td>
+                <td className="t-num">{x.n ? x.avg.toFixed(2) : "–"}</td>
+                <td className="t-num">{x.n ? x.min.toFixed(1) : "–"}</td>
+                <td className="t-num">{x.n ? x.max.toFixed(1) : "–"}</td>
+                <td className="t-num">{x.n}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Card>
+
+      {P.archRows.length ? (
+        <Card title="Archetype performance">
+          {P.archRows.map(r => (
+            <div className="bar-row" key={r.a.id}>
+              <div className="lab">{r.a.label}</div>
+              <div className="bar"><i style={{ width: (r.conv === null ? 0 : r.conv) + "%", background: r.conv === 0 ? "var(--reject)" : "var(--teal)" }}></i></div>
+              <div className="n">{r.conv === null ? "pending" : r.conv + "%"} · {r.total}</div>
+            </div>
+          ))}
+        </Card>
+      ) : null}
+
+      {P.flagRows.length ? (
+        <Card title="Red flag frequency">
+          {P.flagRows.map(r => (
+            <div className="bar-row" key={r.f.id}>
+              <div className="lab" style={{ flexBasis: 260 }}>{r.f.label}</div>
+              <div className="bar"><i style={{ width: (100 * r.n / maxFlag) + "%", background: "var(--reject)" }}></i></div>
+              <div className="n">{r.n}</div>
+            </div>
+          ))}
+        </Card>
+      ) : null}
+
+      <Card title="Recommendations">
+        {P.recs.map((r, i) => (
+          <div className="reco" key={i}>
+            <span className={"imp " + r.imp}>{r.imp === "hi" ? "HIGH" : r.imp === "med" ? "MED" : "LOW"}</span>
+            <div><p>{r.p}</p><small>{r.s}</small></div>
+          </div>
+        ))}
+      </Card>
+    </div>
+  );
+}
+
+/* ============================================================
+   METHOD VIEW
+   ============================================================ */
+function MethodView(){
+  return (
+    <div className="stack method">
+      <Card title="What this is">
+        <p><b style={{ color: "var(--teal)" }}>Change-Ops</b> does for business change what career-ops does for job offers: a weighted evaluation with a hard gate, a legitimacy read kept deliberately outside the score, a tracked pipeline with canonical statuses, and pattern analysis across the portfolio once enough outcomes exist. Same skeleton, retargeted domain.</p>
+        <h4>Block mapping</h4>
+        <table>
+          <thead><tr><th>career-ops</th><th>Change-Ops</th></tr></thead>
+          <tbody>
+            <tr><td>A · Role summary and archetype</td><td>A · Change summary and archetype (six change types, hybrids allowed)</td></tr>
+            <tr><td>B · Match with CV, gaps and mitigations</td><td>B · Capability match, gaps with hard-blocker triage and concrete mitigations</td></tr>
+            <tr><td>C-D · Level, strategy, comp and demand</td><td>C-D · Weighted evaluation: strategic fit, capability, benefits, readiness, risk, minus red flags</td></tr>
+            <tr><td>E-F · Customisation and interview plan</td><td>E-F · Shaping and engagement notes</td></tr>
+            <tr><td>G · Posting legitimacy (ghost jobs)</td><td>G · Initiative legitimacy (zombie change), separate from the score</td></tr>
+          </tbody>
+        </table>
+        <h4>Gate bands</h4>
+        <p>4.5 and above: PROCEED, mobilise now. 4.0 to 4.4: CAUTION, proceed with conditions. 3.5 to 3.9: HOLD, pursue only with a specific reason. Below 3.5: REJECT in current form. The bands are the same 1-5 interpretation career-ops applies to offers; the discipline is in not negotiating with them after the fact.</p>
+        <h4>Ownership models (readiness sub-assessment)</h4>
+        <table>
+          <thead><tr><th>Model</th><th>Home</th><th>When</th></tr></thead>
+          <tbody>
+            <tr><td>a</td><td>Independent</td><td>Differentiating, loosely coupled, the unit can own it end to end and needs its own pace</td></tr>
+            <tr><td>b</td><td>Central-new</td><td>Several units need the same capability and entanglement is manageable: build once, expose to all</td></tr>
+            <tr><td>c</td><td>Central-legacy</td><td>Deep entanglement with the core estate: extend what exists behind strangler-pattern boundaries</td></tr>
+          </tbody>
+        </table>
+        <h4>Rules</h4>
+        <ul className="rule-list">
+          <li>NEVER invent benefits figures or baselines. If there is no data, say so instead of inventing.</li>
+          <li>NEVER let the legitimacy tier leak into the score. They answer different questions.</li>
+          <li>ALWAYS register every assessment in the pipeline, including the ones that die. The patterns need the bodies.</li>
+          <li>ALWAYS name the hard blockers. A gap with no owner and no plan is a decision, not a gap.</li>
+          <li>Time-to-decision beats perfection: a shaped 80% case decided this cycle outruns a perfect case decided never.</li>
+        </ul>
+        <h4>Data</h4>
+        <p>Everything lives in this browser via localStorage under the key <b>change-ops:v1</b>; nothing leaves the device. Export JSON for backup or to move machines. In sandboxed previews without storage the app falls back to in-memory data for the session.</p>
+      </Card>
+    </div>
+  );
+}
+
+/* ============================================================
+   APP SHELL, PWA GLUE, MOUNT
+   ============================================================ */
+const NAV = [
+  { id: "pipeline", label: "Pipeline", k: "P" },
+  { id: "assess",   label: "Assess",   k: "A" },
+  { id: "patterns", label: "Patterns", k: "T" },
+  { id: "method",   label: "Method",   k: "M" }
+];
+
+function App(){
+  const [list, setList] = useState(() => {
+    const saved = store.get(LS_KEY, null);
+    return (saved && Array.isArray(saved.list) && saved.list.length) ? saved.list : seed();
+  });
+  const [tab, setTab] = useState("pipeline");
+  const [draft, setDraft] = useState(null);
+  const [isNew, setIsNew] = useState(false);
+  const [toastMsg, setToastMsg] = useState(null);
+  const [installEvt, setInstallEvt] = useState(null);
+
+  useEffect(() => { store.set(LS_KEY, { list, savedAt: Date.now() }); }, [list]);
+  useEffect(() => {
+    const h = (e) => { e.preventDefault(); setInstallEvt(e); };
+    window.addEventListener("beforeinstallprompt", h);
+    window.addEventListener("appinstalled", () => setInstallEvt(null));
+    return () => window.removeEventListener("beforeinstallprompt", h);
+  }, []);
+
+  const toast = (m) => { setToastMsg(m); setTimeout(() => setToastMsg(null), 2200); };
+  const nextNum = () => list.reduce((mx, c) => Math.max(mx, c.num || 0), 0) + 1;
+
+  const openAssess = (id) => {
+    const c = list.find(x => x.id === id);
+    if (!c) return;
+    setDraft(JSON.parse(JSON.stringify(c)));
+    setIsNew(false); setTab("assess");
+  };
+  const newAssess = () => { setDraft(blankInitiative(nextNum())); setIsNew(true); setTab("assess"); };
+  const saveDraft = () => {
+    if (!draft) return;
+    const d = Object.assign({}, draft, { updated: today(), name: draft.name || "Untitled" });
+    setList(L => {
+      const i = L.findIndex(x => x.id === d.id);
+      if (i === -1) return [...L, d];
+      const copy = L.slice(); copy[i] = d; return copy;
+    });
+    setIsNew(false);
+    toast("Registered in the pipeline. No exceptions, remember.");
+  };
+  const deleteDraft = () => {
+    if (!draft) return;
+    setList(L => L.filter(x => x.id !== draft.id));
+    setDraft(null); setTab("pipeline");
+    toast("Deleted.");
+  };
+  const setStatus = (id, status) => setList(L => L.map(c => c.id === id ? Object.assign({}, c, { status, updated: today() }) : c));
+  const doExport = () => {
+    const blob = new Blob([JSON.stringify({ app: "change-ops", v: 1, list }, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "change-ops-" + today() + ".json";
+    a.click(); URL.revokeObjectURL(a.href);
+  };
+  const doImport = (file) => {
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const data = JSON.parse(r.result);
+        if (data && Array.isArray(data.list)) { setList(data.list); toast("Imported " + data.list.length + " initiative(s)."); }
+        else toast("That file is not a Change-Ops export.");
+      } catch (e) { toast("Could not read that file."); }
+    };
+    r.readAsText(file);
+  };
+  const goTab = (id) => {
+    if (id === "assess" && !draft) { newAssess(); return; }
+    setTab(id);
+  };
+
+  const page = {
+    pipeline: { h: "Pipeline", p: "Every assessment gets registered, including the dead ones. Sorted by priority index: score discounted by risk." },
+    assess:   { h: draft && !isNew ? ("Assess · " + (draft.name || "Untitled")) : "New assessment", p: "Blocks A to G with a live gate verdict. The verdict panel updates as you work; save when it reflects reality." },
+    patterns: { h: "Portfolio patterns", p: "What your own outcomes say about what to stop assessing, where your score floor sits, and which red flag keeps recurring." },
+    method:   { h: "Method", p: "The skeleton, the bands, the models, and the rules. Read once, then argue with the data instead." }
+  }[tab];
+
+  return (
+    <div className="app">
+      <aside className="rail">
+        <div className="brand">
+          <div className="mark">Δ</div>
+          <div><h1>Change-Ops</h1><small>assess · prioritise · critique</small></div>
+        </div>
+        {NAV.map(n => (
+          <button key={n.id} className={"nav-btn" + (tab === n.id ? " on" : "")} onClick={() => goTab(n.id)}>
+            {n.label}<span className="k">{n.k}</span>
+          </button>
+        ))}
+        <div className="spacer"></div>
+        <div className="rail-foot">
+          {installEvt ? (
+            <button className="install-hint" onClick={() => { installEvt.prompt(); }}>
+              <b>Install Change-Ops</b><br />Add to your home screen as an app.
+            </button>
+          ) : null}
+          <div className="meta"><b>{list.length}</b> tracked · data stays in this browser{store.ok ? "" : " (preview: in-memory only)"}<br />v1.0 · single file, no build step</div>
+        </div>
+      </aside>
+
+      <div style={{ minWidth: 0 }}>
+        <div className="topbar">
+          <div className="mark">Δ</div>
+          {NAV.map(n => (
+            <button key={n.id} className={"tb" + (tab === n.id ? " on" : "")} onClick={() => goTab(n.id)}>{n.label}</button>
+          ))}
+        </div>
+        <main className="main">
+          <div className="page-head">
+            <div>
+              <div className="eyebrow">{tab === "assess" ? "Blocks A-G" : tab === "pipeline" ? "Canonical statuses" : tab === "patterns" ? "Outcome analysis" : "Operating rules"}</div>
+              <h2>{page.h}</h2>
+              <p>{page.p}</p>
+            </div>
+          </div>
+          {tab === "pipeline" ? <PipelineView list={list} onOpen={openAssess} onNew={newAssess} onStatus={setStatus} onExport={doExport} onImport={doImport} /> : null}
+          {tab === "assess" && draft ? <AssessView draft={draft} setDraft={setDraft} onSave={saveDraft} onDelete={deleteDraft} isNew={isNew} toast={toast} /> : null}
+          {tab === "patterns" ? <PatternsView list={list} /> : null}
+          {tab === "method" ? <MethodView /> : null}
+        </main>
+      </div>
+      {toastMsg ? <div className="toast">{toastMsg}</div> : null}
+    </div>
+  );
+}
+
+/* ---- PWA: blob manifest + canvas icon, harmless where unsupported ---- */
+(function pwa(){
+  try {
+    const cv = document.createElement("canvas"); cv.width = 192; cv.height = 192;
+    const x = cv.getContext("2d");
+    const g = x.createRadialGradient(60, 60, 10, 96, 96, 140);
+    g.addColorStop(0, "#2DD4BF"); g.addColorStop(1, "#0E4D45");
+    x.fillStyle = "#0B1220"; x.fillRect(0, 0, 192, 192);
+    x.fillStyle = g;
+    x.beginPath();
+    if (x.roundRect) { x.roundRect(20, 20, 152, 152, 36); } else { x.rect(20, 20, 152, 152); }
+    x.fill();
+    x.fillStyle = "#05201C"; x.font = "700 96px 'Space Grotesk', sans-serif";
+    x.textAlign = "center"; x.textBaseline = "middle"; x.fillText("\u0394", 96, 104);
+    const icon = cv.toDataURL("image/png");
+    const manifest = {
+      name: "Change-Ops", short_name: "Change-Ops",
+      start_url: ".", display: "standalone",
+      background_color: "#0B1220", theme_color: "#0B1220",
+      icons: [{ src: icon, sizes: "192x192", type: "image/png" }]
+    };
+    const blob = new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" });
+    const link = document.createElement("link");
+    link.rel = "manifest"; link.href = URL.createObjectURL(blob);
+    document.head.appendChild(link);
+    const touch = document.createElement("link");
+    touch.rel = "apple-touch-icon"; touch.href = icon;
+    document.head.appendChild(touch);
+  } catch (e) { /* preview environments without canvas: skip */ }
+})();
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
 </script>
+<style>
+  .assess-grid{display:grid;grid-template-columns:1fr 330px;gap:16px;align-items:start}
+  @media (max-width:1023px){ .assess-grid{grid-template-columns:1fr} }
+</style>
 </body>
 </html>
