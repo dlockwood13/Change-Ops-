@@ -1,0 +1,21 @@
+{
+  "name": "Change-Ops — change decision engine",
+  "short_name": "Change-Ops",
+  "description": "Assess, prioritise and critique business change. A weighted decision-gate engine for change portfolios, modelled on the career-ops skeleton.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#0B1220",
+  "theme_color": "#0B1220",
+  "categories": ["productivity", "business", "utilities"],
+  "lang": "en-GB",
+  "dir": "ltr",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
