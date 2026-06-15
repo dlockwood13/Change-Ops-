@@ -2,7 +2,7 @@
    Cache-first for the app shell, network-first for navigations with an offline
    fallback to the cached shell. Bump CACHE to force all clients to refresh. */
 
-const CACHE = "change-ops-v2";
+const CACHE = "change-ops-v3";
 
 /* same-origin shell — relative URLs resolve against the SW scope, so this works
    whether the app is served from the repo root or a subfolder */
